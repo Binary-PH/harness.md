@@ -1,0 +1,8 @@
+{
+  // Line length is not enforced: a prose line ends where the sentence ends.
+  "default": true,
+  "MD013": false,
+  // The README opens with the logo image tag, before the title.
+  "MD033": false,
+  "MD041": false
+}
