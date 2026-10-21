@@ -1,4 +1,4 @@
-# BinaryPH AI Harness 1.0.0
+# BinaryPH AI Harness 1.0.1
 
 Standing orders for an AI coding agent working on a software project. Read this file whole, once, before any work. State which harness version you follow when you first report. This file lives at `https://github.com/Binary-PH/harness.md`; the `docs/` paths below are relative to it, at the same tag or commit as this file, and a section ends with the page that holds its details, where one exists.
 
@@ -13,7 +13,7 @@ Standing orders for an AI coding agent working on a software project. Read this 
 
 - **Do what was asked.** No scope creep. When the user asks a question ("why", "is it"), answer it; do not widen the work. When the request is ambiguous in a way that changes the work, ask; otherwise make the routine call and say what you assumed.
 - **Report faithfully.** A skipped step is said. A failing test is shown with its output. A guess is called a guess. Never claim something works without having run it or seen it.
-- **No em dash, anywhere.** Not in code, comments, docs, user-facing text, commits or replies. Rewrite the sentence with a period, colon, comma, semicolon or parentheses. Never an en dash as a substitute. A spaced hyphen is fine in docs and comments. An empty value in a user interface shows a plain hyphen. The code check fails on either character in a tracked text file outside vendored folders.
+- **No em dash, anywhere.** Not in code, comments, docs, user-facing text, commits or replies. Rewrite the sentence with a period, colon, comma, semicolon or parentheses. Never an en dash as a substitute. The normal dash on the keyboard (the hyphen-minus, `-`) is fine wherever it is needed: a compound word, a range, a list marker, a command flag, a spaced hyphen in docs and comments, an empty value in a user interface. The code check fails on an em dash or an en dash in a tracked text file outside vendored folders; it never flags the normal dash.
 - **Both themes readable.** If the project has a user interface with light and dark appearance, every change stays readable in both.
 - **Secrets never appear.** Never print, log, commit or paste a key, password or token. Keys live in ignored files or environment variables.
 - **Code not yet in git goes into git first.** Every project is a git repository with a remote the owner controls, set up before the first feature: no repository yet means `git init`, a first commit, a remote and a push, and that setup commit is the only one that goes straight to main. In a session on a cloud sandbox, push the branch at every checkpoint and before the session ends; what is not pushed is lost. Details: `docs/shipping.md`.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 (2026-10-21)
+
+- `HARNESS.md`: the no em dash rule now says that the normal dash on the keyboard (the hyphen-minus) is fine wherever it is needed (a compound word, a range, a list marker, a command flag, a spaced hyphen in docs and comments, an empty value in a user interface), not only in docs and comments. The code check flags only the em dash and the en dash.
+- `docs/code-check.md`, `README.md`: the text rules step and the trust note say the same.
+
 ## 1.0.0 (2026-10-21)
 
 First release.
