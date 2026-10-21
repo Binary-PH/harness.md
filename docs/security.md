@@ -62,6 +62,7 @@ The code check gate (`docs/code-check.md`) covers the code. This page covers wha
 - **Scanner tripwires.** On a site that is not WordPress, requests for `/wp-login.php`, `/xmlrpc.php`, `/.env` or `/.git` are never legitimate. Answer them with a plain 404 and let them feed the rate brake.
 - **Secrets** live in environment variables or in an ignored secrets file, never in container images, never in logs. Command logging stays off when commands may carry keys.
 - **Browser keys** are restricted by referrer or app with the provider, because the bundle is public.
+- **Keys and passwords on screen** are hidden by default. A saved API key, token or other secret shown in a settings page, a form, a detail view or a list (one toggle per row), a field where a new one is typed in, and every password field, start hidden and show only while a toggle beside the field is on. The toggle is a control that works by keyboard and carries a name a screen reader reads ("Show key", "Hide key", "Show password", "Hide password"). Every open of the view (a page load, or a route change in a single-page app) starts hidden; the shown state is never saved. A copy control may copy the value without showing it. A saved secret is never put into the page title, the URL or a log, shown or hidden, and a password field is marked as a password so the browser treats it as one.
 - **Mail** goes out through a provider covered by the SPF record, and the DMARC policy is tightened only after confirming the project's own mail (password resets, alerts) passes.
 
 ## Working the results
