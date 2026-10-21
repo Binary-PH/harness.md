@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 (2026-10-21)
+
+- `HARNESS.md` section 2: a new working rule, keys and passwords are hidden on screen. Where the product's user interface shows a saved key, token or other secret, takes one in, or takes a password, the field hides the value by default and a toggle beside it shows it and hides it again; the toggle works by keyboard and has a name a screen reader reads; every open of the view starts hidden and the shown state is never saved; a copy control may copy without showing.
+- `docs/security.md`: the defensive design section carries the detail: where the rule applies (settings pages, forms, detail views, lists with one toggle per row, a field for a new key, every password field), the toggle's names, the shown state never saved, no secret in the page title, the URL or a log, a password field marked as a password.
+- `CONTRIBUTING.md`: the decision is listed among the decisions already taken.
+
 ## 1.3.0 (2026-10-21)
 
 - `CONTRIBUTING.md`: a new page for whoever maintains this repository, person or agent, in any session: the rules of the text, versioning, the release procedure with the scans and the lint, the decisions already taken, and where decisions and lessons go. The instruction file a cloud session reads points at it.
