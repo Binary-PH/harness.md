@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0 (2026-10-21)
+
+- `docs/playbooks/motion-video.md`: a new playbook for motion graphics and video. Storyboard and one hero moment first; one timeline of named beats that scenes, sound and review all read; every frame from the time alone; two pipelines (compositions, and a self-contained page captured frame by frame by a headless browser); motion defaults with numbers; a review loop over contact sheets, with done meaning a clean pass over the latest render; generated sound from the same timeline with level, pan and loudness targets; music-driven pieces; the gallery; checks and tests.
+- `HARNESS.md` section 3, `docs/playbooks.md`, `README.md`: the playbook is named beside the other two.
+- `README.md`: the parts and the files are lists instead of tables, so they read on a phone.
+- `HARNESS.md` section 9, `docs/lessons.md`: memory recall and links. A lesson proved wrong is retired with the date instead of removed, and a changed fact becomes a new entry (an order that changed); one file per cue so a repeat overwrites; bounded recall at session start, two hops at most, nothing cut silently; a local word index when memory outgrows the index file; links that carry their evidence or say they were asserted by hand; nothing invented to fill a gap.
+
 ## 1.0.1 (2026-10-21)
 
 - `HARNESS.md`: the no em dash rule now says that the normal dash on the keyboard (the hyphen-minus) is fine wherever it is needed (a compound word, a range, a list marker, a command flag, a spaced hyphen in docs and comments, an empty value in a user interface), not only in docs and comments. The code check flags only the em dash and the en dash.

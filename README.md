@@ -20,15 +20,13 @@ A harness is everything around an AI coding agent that decides how it works: the
 
 ## What a harness is made of
 
-| Part | What it sets | Where |
-| ---- | ------------ | ----- |
-| Instructions | the orders the agent reads first: working rules, decisions before coding, parity across copies of a product | `HARNESS.md` |
-| Code check gate | one command before every build, package or ship: type check, linter, static security analysis, secrets scan, dependency vulnerabilities, platform analyzer, text rules | `docs/code-check.md`, `docs/tools-by-language.md` |
-| Test runner | three tiers, path filters, no rerun on identical code, a preflight that prints the fix for every problem, a fresh database per run, FAILED (the code is wrong) apart from BLOCKED (the environment could not run it) | `docs/testing.md` |
-| Ship flow | main is production: branch, version bump, checks once, pull request, squash-merge, health check, tag; served assets carry their version in the file name; no workflow run started by hand without the owner's go | `docs/shipping.md` |
-| Security posture | passive, light and active checks of the deployed surface, and the rules before any check | `docs/security.md` |
-| Memory | lessons with a cue, the lesson and the evidence; none without evidence | `docs/lessons.md` |
-| Playbooks | decisions before coding, WordPress, 3D renders from an image, interactive web pages | `docs/playbooks.md`, `docs/playbooks/3d-renders.md`, `docs/playbooks/interactive-web.md` |
+- **Instructions** (`HARNESS.md`): the orders the agent reads first: working rules, decisions before coding, parity across copies of a product.
+- **Code check gate** (`docs/code-check.md`, `docs/tools-by-language.md`): one command before every build, package or ship: type check, linter, static security analysis, secrets scan, dependency vulnerabilities, platform analyzer, text rules.
+- **Test runner** (`docs/testing.md`): three tiers, path filters, no rerun on identical code, a preflight that prints the fix for every problem, a fresh database per run, FAILED (the code is wrong) apart from BLOCKED (the environment could not run it).
+- **Ship flow** (`docs/shipping.md`): main is production: branch, version bump, checks once, pull request, squash-merge, health check, tag; served assets carry their version in the file name; no workflow run started by hand without the owner's go.
+- **Security posture** (`docs/security.md`): passive, light and active checks of the deployed surface, and the rules before any check.
+- **Memory** (`docs/lessons.md`): lessons with a cue, the lesson and the evidence; none without evidence; retired with a date, never deleted; bounded recall; links that show their evidence.
+- **Playbooks** (`docs/playbooks.md` and the three pages under `docs/playbooks/`): decisions before coding, WordPress, 3D renders from an image, interactive web pages, motion graphics and video.
 
 ## Install
 
@@ -61,19 +59,18 @@ In the first session on a project, the agent:
 
 ## Files
 
-| File | Holds |
-| ---- | ----- |
-| `HARNESS.md` | the entry file: imperative orders, about ten minutes to read |
-| `docs/code-check.md` | the gate, step by step, with what blocks |
-| `docs/testing.md` | tiers, path filters, isolation, lanes, hashing, preflight, database hygiene, verdicts, the A/B rule |
-| `docs/shipping.md` | the repository and its remote, the ten ship steps, pull request text, dependency update bot pull requests, workflow runs on the host |
-| `docs/security.md` | passive, light and active checks of the deployed surface, and the rules before any check |
-| `docs/lessons.md` | the lesson format, memory, snapshot and inbox |
-| `docs/playbooks.md` | decisions before coding; WordPress; pointers to the two playbooks |
-| `docs/playbooks/3d-renders.md` | a 3D model from a reference image, built from a spec in passes and judged against the image |
-| `docs/playbooks/interactive-web.md` | scroll-driven and 3D pages, accessible and light |
-| `docs/tools-by-language.md` | the tool table per language and the cross-language tools |
-| `CHANGELOG.md` | every change to the harness |
+- `HARNESS.md`: the entry file: imperative orders, about ten minutes to read.
+- `docs/code-check.md`: the gate, step by step, with what blocks.
+- `docs/testing.md`: tiers, path filters, isolation, lanes, hashing, preflight, database hygiene, verdicts, the A/B rule.
+- `docs/shipping.md`: the repository and its remote, the ten ship steps, pull request text, dependency update bot pull requests, workflow runs on the host.
+- `docs/security.md`: passive, light and active checks of the deployed surface, and the rules before any check.
+- `docs/lessons.md`: the lesson format, memory, snapshot and inbox, recall, links and retirement.
+- `docs/playbooks.md`: decisions before coding; WordPress; pointers to the three playbooks.
+- `docs/playbooks/3d-renders.md`: a 3D model from a reference image, built from a spec in passes and judged against the image.
+- `docs/playbooks/interactive-web.md`: scroll-driven and 3D pages, accessible and light.
+- `docs/playbooks/motion-video.md`: a video from code: one timeline, frames from time alone, a review loop over contact sheets, generated sound.
+- `docs/tools-by-language.md`: the tool table per language and the cross-language tools.
+- `CHANGELOG.md`: every change to the harness.
 
 ## Trust
 

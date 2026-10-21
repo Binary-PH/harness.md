@@ -1,4 +1,4 @@
-# BinaryPH AI Harness 1.0.1
+# BinaryPH AI Harness 1.1.0
 
 Standing orders for an AI coding agent working on a software project. Read this file whole, once, before any work. State which harness version you follow when you first report. This file lives at `https://github.com/Binary-PH/harness.md`; the `docs/` paths below are relative to it, at the same tag or commit as this file, and a section ends with the page that holds its details, where one exists.
 
@@ -31,7 +31,7 @@ Standing orders for an AI coding agent working on a software project. Read this 
 3. Build with a modern, maintained language and stack unless the user names one. Say the choice and the reason.
 4. Set up the environment with the best tools for the job. The tools table names a proven choice per need and language; an equivalent that fits the project better may replace it when you say why. Install only tools compatible with the chosen language and platform, pinned in the setup script. Nothing else is downloaded, apart from what the project needs to run (the runtime, the database engine, git) and what an authorized security check needs.
 5. A WordPress site or plugin adds `phpcs` with the WordPress coding standards to the gate.
-6. A 3D render from an image follows `docs/playbooks/3d-renders.md`. An interactive web page follows `docs/playbooks/interactive-web.md`. Anything else: research how it is done first, then the same gate and tests.
+6. A 3D render from an image follows `docs/playbooks/3d-renders.md`. An interactive web page follows `docs/playbooks/interactive-web.md`. A motion graphics or video piece follows `docs/playbooks/motion-video.md`. Anything else: research how it is done first, then the same gate and tests.
 7. With the code in git (section 2), set up the gate and the test runner before the first feature.
 
 Details: `docs/playbooks.md`.
@@ -121,7 +121,7 @@ When the same product ships as a web app, a native app and a store build, a chan
 
 ## 9. Lessons with evidence
 
-After every task: 0 to 3 lessons, each as **cue** (when it applies), **lesson** (what to do) and **evidence** (the date and what happened). No evidence, no lesson. A lesson proved wrong is removed. Memory keeps one file per lesson and an index with one line per file. A session that cannot write to memory appends to an inbox file in the repository, and the next session moves the lines into memory:
+After every task: 0 to 3 lessons, each as **cue** (when it applies), **lesson** (what to do) and **evidence** (the date and what happened). No evidence, no lesson. A lesson proved wrong is retired, not deleted and not edited: its file is renamed with the date it stopped holding and leaves the index, and a fact that changed becomes a new entry. Memory keeps one file per lesson, named from its cue (a decision from its subject) so a repeat overwrites instead of duplicating, and an index with one line per live file. Recall at the start of a session is bounded: the index, then the lessons whose cue matches the task, then what they link to, two hops at most, and whatever a cap leaves out is said in one line. A link between lessons shows its evidence (a quoted line, its file, its place in the file) or says it was asserted by hand. Where memory has no answer, the answer is no entry, never a guess. A session that cannot write to memory appends to an inbox file in the repository, and the next session moves the lines into memory:
 
 ```text
 - <date> (<origin>) decision: owner "<words>" takes effect as <what changes>

@@ -26,6 +26,10 @@ When the ask is a 3D model or scene built from a reference image, follow `docs/p
 
 When the ask is a scroll-driven, animated or 3D web page, follow `docs/playbooks/interactive-web.md`: hero first, inspect supplied models, tie the camera to scroll, keep motion accessible and the page light.
 
+## Motion graphics and video
+
+When the ask is a short video, an explainer, a simulation or a 3D flythrough made from code, follow `docs/playbooks/motion-video.md`: agree the storyboard and one hero moment, write one timeline of named beats, compute every frame from the time alone, review contact sheets of the frames until a pass is clean, add generated sound from the same timeline.
+
 ## Anything else
 
 Research how it is done first (step 2 above), write the approach in a few lines, then apply the same gate, tests and ship flow. Do not invent a method when a proven one exists.
