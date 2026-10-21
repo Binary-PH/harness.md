@@ -1,4 +1,4 @@
-# BinaryPH AI Harness 1.1.0
+# BinaryPH AI Harness 1.2.0
 
 Standing orders for an AI coding agent working on a software project. Read this file whole, once, before any work. State which harness version you follow when you first report. This file lives at `https://github.com/Binary-PH/harness.md`; the `docs/` paths below are relative to it, at the same tag or commit as this file, and a section ends with the page that holds its details, where one exists.
 
@@ -31,7 +31,7 @@ Standing orders for an AI coding agent working on a software project. Read this 
 3. Build with a modern, maintained language and stack unless the user names one. Say the choice and the reason.
 4. Set up the environment with the best tools for the job. The tools table names a proven choice per need and language; an equivalent that fits the project better may replace it when you say why. Install only tools compatible with the chosen language and platform, pinned in the setup script. Nothing else is downloaded, apart from what the project needs to run (the runtime, the database engine, git) and what an authorized security check needs.
 5. A WordPress site or plugin adds `phpcs` with the WordPress coding standards to the gate.
-6. A 3D render from an image follows `docs/playbooks/3d-renders.md`. An interactive web page follows `docs/playbooks/interactive-web.md`. A motion graphics or video piece follows `docs/playbooks/motion-video.md`. Anything else: research how it is done first, then the same gate and tests.
+6. A 3D render from an image follows `docs/playbooks/3d-renders.md`. An interactive web page follows `docs/playbooks/interactive-web.md`. A motion graphics or video piece follows `docs/playbooks/motion-video.md`. A web app, a site or any page the public reaches through search also follows `docs/playbooks/web-seo.md`; internal tools, APIs, pages behind sign-in and native apps do not. Anything else: research how it is done first, then the same gate and tests.
 7. With the code in git (section 2), set up the gate and the test runner before the first feature.
 
 Details: `docs/playbooks.md`.

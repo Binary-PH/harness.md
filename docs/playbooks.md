@@ -30,6 +30,10 @@ When the ask is a scroll-driven, animated or 3D web page, follow `docs/playbooks
 
 When the ask is a short video, an explainer, a simulation or a 3D flythrough made from code, follow `docs/playbooks/motion-video.md`: agree the storyboard and one hero moment, write one timeline of named beats, compute every frame from the time alone, review contact sheets of the frames until a pass is clean, add generated sound from the same timeline.
 
+## Web apps and sites the public reaches through search
+
+When the project is a web app, a site or any page a search engine or an answer engine can reach (a marketing site, a shop, a blog, documentation, a local business page), follow `docs/playbooks/web-seo.md` as well: decide the kind of site, serve what matters in the first HTML, keep crawling and indexing clean, meet the speed and image targets, write pages with an author, dates and a direct answer, add truthful structured data, and audit with findings that say how they would fail. Internal tools, APIs, pages behind sign-in and native apps skip it.
+
 ## Anything else
 
 Research how it is done first (step 2 above), write the approach in a few lines, then apply the same gate, tests and ship flow. Do not invent a method when a proven one exists.

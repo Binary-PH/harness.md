@@ -59,7 +59,7 @@ The code check gate (`docs/code-check.md`) covers the code. This page covers wha
 ## Defensive design these checks assume
 
 - **Sign-in limits** per address, per account and a global cap on failures. Name the trade-off: an attacker can burn the global cap and lock real users out for a while, so a second factor is the real fix, and the cap is the brake until then.
-- **Scanner tripwires.** On a site that is not WordPress, requests for `/wp-login.php`, `/xmlrpc.php`, `/.env` or `/.git` are never legitimate. Answer them with nothing and let them feed the rate brake.
+- **Scanner tripwires.** On a site that is not WordPress, requests for `/wp-login.php`, `/xmlrpc.php`, `/.env` or `/.git` are never legitimate. Answer them with a plain 404 and let them feed the rate brake.
 - **Secrets** live in environment variables or in an ignored secrets file, never in container images, never in logs. Command logging stays off when commands may carry keys.
 - **Browser keys** are restricted by referrer or app with the provider, because the bundle is public.
 - **Mail** goes out through a provider covered by the SPF record, and the DMARC policy is tightened only after confirming the project's own mail (password resets, alerts) passes.

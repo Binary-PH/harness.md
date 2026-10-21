@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 (2026-10-21)
+
+- `docs/playbooks/web-seo.md`: a new playbook, search visibility for a web app or site, applied only to what the public reaches through search. The kind of site first; what the first HTML must carry; crawl and index rules (robots, sitemap, canonical, redirects, pagination, languages, crawler decisions by exact name); URLs, security and mobile parity; the three field metrics with thresholds and the image targets; page content (headings, coverage floors, readability, author and dates, trust pages, passages an answer engine can cite); structured data with the types to use and the types never to add; extra checks for local, shop, publisher, product and programmatic sites; the audit, its priorities and the four things every recommendation carries; checks and tests to add.
+- `HARNESS.md` section 3, `docs/playbooks.md`, `README.md`: the playbook is named beside the other three, with its scope.
+
 ## 1.1.0 (2026-10-21)
 
 - `docs/playbooks/motion-video.md`: a new playbook for motion graphics and video. Storyboard and one hero moment first; one timeline of named beats that scenes, sound and review all read; every frame from the time alone; two pipelines (compositions, and a self-contained page captured frame by frame by a headless browser); motion defaults with numbers; a review loop over contact sheets, with done meaning a clean pass over the latest render; generated sound from the same timeline with level, pan and loudness targets; music-driven pieces; the gallery; checks and tests.

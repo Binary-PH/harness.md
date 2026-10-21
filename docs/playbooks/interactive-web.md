@@ -30,7 +30,7 @@ Scroll-driven, animated or 3D web pages: a hero with a model or a scene, section
 
 ## 5. Accessibility
 
-- Every control reachable by keyboard, with a visible focus state. Every image and model has a text alternative that says what it shows.
+- Every control reachable by keyboard, with a visible focus state. Every image and model has a text alternative that says what it shows; a purely decorative image has an empty one.
 - Screen readers get the content in reading order, independent of the visual motion.
 - Contrast holds in both light and dark appearance.
 

@@ -26,7 +26,7 @@ A harness is everything around an AI coding agent that decides how it works: the
 - **Ship flow** (`docs/shipping.md`): main is production: branch, version bump, checks once, pull request, squash-merge, health check, tag; served assets carry their version in the file name; no workflow run started by hand without the owner's go.
 - **Security posture** (`docs/security.md`): passive, light and active checks of the deployed surface, and the rules before any check.
 - **Memory** (`docs/lessons.md`): lessons with a cue, the lesson and the evidence; none without evidence; retired with a date, never deleted; bounded recall; links that show their evidence.
-- **Playbooks** (`docs/playbooks.md` and the three pages under `docs/playbooks/`): decisions before coding, WordPress, 3D renders from an image, interactive web pages, motion graphics and video.
+- **Playbooks** (`docs/playbooks.md` and the four pages under `docs/playbooks/`): decisions before coding, WordPress, 3D renders from an image, interactive web pages, motion graphics and video, search visibility for web apps and sites.
 
 ## Install
 
@@ -65,10 +65,11 @@ In the first session on a project, the agent:
 - `docs/shipping.md`: the repository and its remote, the ten ship steps, pull request text, dependency update bot pull requests, workflow runs on the host.
 - `docs/security.md`: passive, light and active checks of the deployed surface, and the rules before any check.
 - `docs/lessons.md`: the lesson format, memory, snapshot and inbox, recall, links and retirement.
-- `docs/playbooks.md`: decisions before coding; WordPress; pointers to the three playbooks.
+- `docs/playbooks.md`: decisions before coding; WordPress; pointers to the four playbooks.
 - `docs/playbooks/3d-renders.md`: a 3D model from a reference image, built from a spec in passes and judged against the image.
 - `docs/playbooks/interactive-web.md`: scroll-driven and 3D pages, accessible and light.
 - `docs/playbooks/motion-video.md`: a video from code: one timeline, frames from time alone, a review loop over contact sheets, generated sound.
+- `docs/playbooks/web-seo.md`: search visibility for a web app or site: the first HTML, crawl and index, speed and images, page content, structured data, checks by kind of site, the audit.
 - `docs/tools-by-language.md`: the tool table per language and the cross-language tools.
 - `CHANGELOG.md`: every change to the harness.
 
