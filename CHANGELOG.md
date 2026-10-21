@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0 (2026-10-21)
+
+- `CONTRIBUTING.md`: a new page for whoever maintains this repository, person or agent, in any session: the rules of the text, versioning, the release procedure with the scans and the lint, the decisions already taken, and where decisions and lessons go. The instruction file a cloud session reads points at it.
+- `README.md`: the page is listed under the files.
+
 ## 1.2.0 (2026-10-21)
 
 - `docs/playbooks/web-seo.md`: a new playbook, search visibility for a web app or site, applied only to what the public reaches through search. The kind of site first; what the first HTML must carry; crawl and index rules (robots, sitemap, canonical, redirects, pagination, languages, crawler decisions by exact name); URLs, security and mobile parity; the three field metrics with thresholds and the image targets; page content (headings, coverage floors, readability, author and dates, trust pages, passages an answer engine can cite); structured data with the types to use and the types never to add; extra checks for local, shop, publisher, product and programmatic sites; the audit, its priorities and the four things every recommendation carries; checks and tests to add.

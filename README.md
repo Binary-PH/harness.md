@@ -72,6 +72,7 @@ In the first session on a project, the agent:
 - `docs/playbooks/web-seo.md`: search visibility for a web app or site: the first HTML, crawl and index, speed and images, page content, structured data, checks by kind of site, the audit.
 - `docs/tools-by-language.md`: the tool table per language and the cross-language tools.
 - `CHANGELOG.md`: every change to the harness.
+- `CONTRIBUTING.md`: how this repository is maintained: the rules of the text, the release procedure, the decisions already taken.
 
 ## Trust
 
