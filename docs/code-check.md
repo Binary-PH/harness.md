@@ -23,7 +23,7 @@ The report is one row per tool: the tool, its status, the count of findings, and
 | 4 | Secrets in what ships | keys, tokens, passwords, private keys | a secrets scanner (Gitleaks or equivalent) over the folders that ship (server code, app source, assets), redacted output, exit code ignored so the gate decides itself; the allow-list holds only dependency folders, build output, data folders, the ignored env file and files that are public by design | any finding |
 | 5 | Dependency vulnerabilities | known vulnerable versions | a vulnerability scanner (OSV-Scanner or equivalent) over every lock file | a finding with a severity score of 7.0 or higher; lower scores are reported |
 | 6 | Platform analyzer | errors the platform's own analyzer knows | the analyzer from the tools table (`docs/tools-by-language.md`): the Dart analyzer for Flutter, `phpcs` with the WordPress standards for WordPress, and so on | errors, or no parsed output; warnings only where the tools table says so |
-| 7 | Text rules | em dash (U+2014) and en dash (U+2013) | read every tracked text file; skip binaries (any NUL byte) and vendored folders; write the code points in the checker's source so it passes its own check | any hit; the report tells where and how to rewrite the sentence |
+| 7 | Text rules | em dash (U+2014) and en dash (U+2013); the normal dash (hyphen-minus, U+002D) is allowed and never scanned | read every tracked text file; skip binaries (any NUL byte) and vendored folders; write the code points in the checker's source so it passes its own check | any hit; the report tells where and how to rewrite the sentence, with the normal dash where a dash is needed |
 
 Run every step even when an earlier one failed, so one report shows everything.
 

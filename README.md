@@ -79,7 +79,7 @@ In the first session on a project, the agent:
 
 - These files are plain Markdown: no scripts, no remote includes.
 - Releases are tagged. The CHANGELOG lists every change.
-- The repository passes its own text rules before each release: no em dash, no en dash, no link except to this repository, no secret.
+- The repository passes its own text rules before each release: no em dash, no en dash (the normal dash is fine), no link except to this repository, no secret.
 
 ## Versioning
 
