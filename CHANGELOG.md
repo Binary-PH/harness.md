@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.0 (2026-10-22)
+
+- `HARNESS.md` section 1: a new order, the project's instruction file points at the harness by its address, or at the project's copy, and writes no harness version. The version followed is the one in the title of the file read; a number in the instruction file goes stale with the next release and can be read as a pin, so an agent skips the orders added since.
+- `README.md` (first use) and `CONTRIBUTING.md` (decisions already taken) say the same.
+
 ## 1.6.0 (2026-10-22)
 
 - `docs/security-review.md`: a new page, the security review of the code: what a reader finds and a tool does not. When it runs (scoped to the diff before a pull request that touches a trust boundary; full when the owner asks, before a big or money-related release, and with the expensive tier). Its rules: source and a sandbox only, never the deployed system; what the repository does not show is unknown, not assumed; a finding is checked by a reader who did not hunt it; findings are records and the report is derived from them; no padding. The six things a finding names, each with file and line, and the smallest fix with a regression test. Three verdicts kept apart: confirmed (the only one with a severity), needs validation (one decisive fact outside the repository, with the owner's safe check), rejected (kept). Severity anchors from critical to informational, capped by the observed impact. A coverage list of entry surface by boundary by class as the claim, with a gap pass by a fresh reader and the next review starting from the last list. The classes of flaw to read for, and the classes per kind of project. The report's parts.

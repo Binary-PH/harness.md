@@ -51,7 +51,7 @@ Some tools can import a file with a line that reads `@HARNESS.md` (from a subfol
 
 In the first session on a project, the agent:
 
-1. Reads `HARNESS.md` and states which version it follows.
+1. Reads `HARNESS.md` and states which version it follows. The project's instruction file points at the harness without a version number, so the next session reads the latest release, or the copy in the project.
 2. Puts the code in git with a remote the owner controls, if it is not there yet.
 3. Sets up the environment with the best tools for the job, only those that fit the project's languages, pinned.
 4. Writes the project's own check command and test runner from the specs, in the project's language, and wires the check into the build scripts.
