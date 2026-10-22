@@ -21,8 +21,8 @@ Each lesson has three parts, and an optional fourth:
 
 ## Where lessons live
 
-- **Memory**: one file per lesson or decision, named from the cue (a decision from its subject), with a one-line description and the body. An index file lists one line per live entry (name, hook) and never the content, so the index stays small enough to load every session.
-- **Snapshot in the repository**: when sessions run on more than one machine, a copy of the memory folder lives in the repository (for example `docs/context/memory/`) and is refreshed by a script, so a fresh clone starts with the same knowledge.
+- **Memory**: one file per lesson or decision, named from the cue (a decision from its subject), with a one-line description and the body. An index file in the memory folder lists one line per live entry (name, hook) and never the content, so the index stays small enough to load every session.
+- **Snapshot in the repository**: when sessions run on more than one machine, a copy of the memory folder lives in the repository (`docs/context/memory/`) and is refreshed before each pull request (ship step 4), so a fresh clone starts with the same knowledge.
 - **Inbox**: a session that cannot write to memory (a cloud session, a different machine) appends lines to `docs/context/inbox.md`. The next session with memory access moves them into memory and empties the inbox:
 
 ```text

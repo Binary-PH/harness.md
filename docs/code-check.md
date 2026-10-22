@@ -9,6 +9,7 @@ Build it once per project, in the language of the project's main server or build
 - `[targets]`: which parts of the project to check (server, web, app). No target means all.
 - `--gate`: exit non-zero when any blocking row exists. Without it the same report prints and the exit code is 0, so the command is safe to run at any time.
 - `--changed`: check only the files changed against the merge base with main, plus uncommitted and untracked files (see below).
+- `--deps`: run only the dependency vulnerability step, over every lock file. Ship step 3 runs it before each merge, because a new advisory appears without a code change.
 - `--fast`: skip the slow static security analysis for a quick local loop. Never in the gate: the command refuses `--fast` together with `--gate`.
 
 The report is one row per tool: the tool, its status, the count of findings, and the path to its JSON output. The full run writes to `reports/latest/` (a `summary.txt` plus one JSON file per tool) under the folder the project names for installs and runs, not in the source tree.
@@ -34,12 +35,12 @@ Run every step even when an earlier one failed, so one report shows everything.
 
 ## Changed-files mode
 
-`--changed` takes the files changed against the merge base with main (`git diff --name-only <merge-base>`; before the first commit on a branch that is the working-tree diff) plus uncommitted and untracked files that are not ignored, and sorts them into buckets by kind: code files, platform files, files that may hold secrets, lock files, text files. Only the steps a bucket reaches run:
+A full run runs every step. Inside a test run, the preflight catches a missing tool before the gate starts (BLOCKED, exit `2`), and a blocking finding makes the gate step FAILED. `--changed` takes the files changed against the merge base with main (`git diff --name-only <merge-base>`; before the first commit on a branch that is the working-tree diff) plus uncommitted and untracked files that are not ignored, and sorts them into buckets by kind: code files, platform files, files that may hold secrets, lock files, text files. Only the steps a bucket reaches run:
 
 - code files: type check (when a file of that kind changed), linter, static security analysis, text rules;
 - platform files: the platform analyzer (when more than about 60 files changed, run the whole project);
 - any file in the folders that ship: one secrets scan per changed file;
-- lock files: the dependency scan, only for the lock files that changed;
+- lock files: the dependency scan, only for the lock files that changed (before a merge, `--deps` runs it over every lock file);
 - text files, including docs: the text rules.
 
 Each changed-mode run writes to its own folder (`reports/changed-<pid>/`), so two runs never collide, and the folder is kept only when something was found.

@@ -4,9 +4,9 @@ Fast tests that stay accurate: run what a change can reach, run it once, and tel
 
 ## Three tiers
 
-1. **Every change** (each pull request): the code check on the changed files, plus only the suites the change reaches. A docs-only change runs no suite. A change to the runner, its filters or a check runs everything it gates. A skipped suite is not a failure. A suite that passed on identical code is not run again.
-2. **Before a merge into main** (a deploy): the same filtered run over everything changed since the last release tag (`--since <tag>`). Packaging and release builds keep the full code check gate.
-3. **The expensive tier**, before a merge that bumps the first or second number of the version or touches payments or billing, and when the owner asks: every suite (`--all`), browser engine checks, the device profiles a web app or site owes its users (below), persona walkthroughs, live-like runs and the full security review of the code (`docs/security-review.md`). It never runs on a calendar: a run over code that did not change proves nothing new. The cost of that choice: a long run of third-number releases leaves the device profiles unrun until a larger release or the owner's ask.
+1. **Every change** (each pull request): the code check on the changed files, plus only the suites the change reaches. A docs-only change (only files the filters `ignore`) runs no suite; content a site publishes is mapped to its suites, so it is never docs-only. A change to the runner, its filters or a check runs everything it gates. A skipped suite is not a failure. A suite that passed on identical code is not run again.
+2. **Before a merge into main** (a deploy): the same filtered run over everything changed since the last release tag (`--since <tag>`), plus the suites marked `expensive` whose paths that change reaches. Packaging and release builds keep the full code check gate.
+3. **The expensive tier**, in place of tier 2 for that merge, before a merge that bumps the first or second number of the version or touches payments or billing, and when the owner asks: every suite (`--all`), browser engine checks, the device profiles a web app or site owes its users (below), persona walkthroughs, live-like runs and the full security review of the code (`docs/security-review.md`). It never runs on a calendar: a run over code that did not change proves nothing new. Its full security review takes the place of the scoped one.
 
 The pull request says which tier ran and what was skipped. Nothing needs a hosted CI service: the same runner runs on the developer's machine or in a cloud session.
 
@@ -22,17 +22,21 @@ A filters file maps each suite to the paths it covers:
     "end-to-end":    { "paths": ["server/src/**", "server/tools/e2e/**"] },
     "web-smoke":     { "paths": ["server/src/web/**", "web/**"] },
     "web-devices":   { "paths": ["server/src/web/**", "web/**"], "expensive": true },
+    "live-like":     { "paths": ["server/src/**"], "expensive": true, "uncached": true },
     "app-unit":      { "paths": ["app/lib/**", "app/test/**"], "full": ["app/pubspec.*", "app/assets/**"] }
-  }
+  },
+  "flaky": [
+    { "step": "end-to-end", "since": "2026-01-15", "log": "runs/2026-01-15-1002/end-to-end.log" }
+  ]
 }
 ```
 
 Decision, in order:
 
-1. `--release` means `--all` plus the packaging steps. `--all` runs every suite and ignores the pass cache.
+1. `--release` means `--all` plus the packaging steps. `--all` selects every suite, the ones marked `expensive` included; the pass cache still skips a suite that passed on identical code and tools.
 2. Otherwise the changed set is the diff against the merge base with main (so a branch's commits count, not only uncommitted work), or against `<ref>` with `--since <ref>`, plus uncommitted and untracked files, minus the `ignore` globs. Nothing left means no suite runs.
 3. If the runner or the filters file changed, every suite runs: a change to the gate runs what it gates.
-4. Otherwise a suite runs when a changed path matches one of its `paths` globs (`**` is any depth, `*` stays inside one folder). A suite marked `expensive` is left to `--all` and `--release`, whatever changed.
+4. Otherwise a suite runs when a changed path matches one of its `paths` globs (`**` is any depth, `*` stays inside one folder). A suite marked `expensive` is left out of `--changed`: it runs with `--since <ref>` (before a merge) when its paths match, and always with `--all` and `--release`.
 5. The code check step is added whenever a file changed; the check command decides which of its steps the files reach (the text rules for docs, the full set for code).
 
 ## Browsers and devices for a web app or site
@@ -49,7 +53,7 @@ Every current browser runs on one of three engines: the one most desktop browser
 How they run:
 
 - The end-to-end tool runs each target as a profile: engine, viewport, touch, pixel ratio and user agent. The profiles live in the test setup, pinned like any other tool, and the preflight checks that the browser binaries are installed.
-- Every change runs two profiles, the desktop in the default engine and Android: they belong to the suite the filters file maps to the front-end paths (`web-smoke` above). The expensive tier runs the rest (`web-devices` above, marked `expensive`): iPhone, the in-app profiles, and the desktop in the two other engines.
+- Every change that reaches the front end runs two profiles, the desktop in the default engine and Android: they belong to the suite the filters file maps to the front-end paths (`web-smoke` above). The rest (`web-devices` above, marked `expensive`: iPhone, the in-app profiles, and the desktop in the two other engines) run once before a merge whose change reaches the front end, and in the expensive tier, so no front-end change ships untested on any profile and no profile runs on every commit.
 - The desktop profile also runs the checks that do not depend on the device: both appearances where the project has them, and reduced motion on. The other profiles run once, in the default appearance.
 - A feature the in-app browsers lack is tested by the fallback: the suite stubs the feature as missing in the in-app profiles and asserts the screen's alternative appears.
 - A pass on an emulated profile is the normal evidence. A difference that depends on the real operating system or device (fonts, scrollbars, file and date pickers, a keyboard that covers a field, a safe area) is a hand check on the real thing when a change touches it or the owner asks, and its result goes into the pull request text like any other hand check.
@@ -78,7 +82,7 @@ A server lane (database, server, API suites, web smokes) and an app lane (unit t
 
 ## No rerun on identical code
 
-Each suite gets a hash over: the suite key, the hash of the runner and the filters file, the selected test files, and every tracked file matching its paths as `path:sha256`, sorted. A pass stores the hash in `pass-cache.json`. When the hash equals the stored one, the suite is skipped and reported as `skipped (passed on identical code)`. `--no-cache` forces a rerun. A `--release` run (packaged artifacts) always runs everything; a merge into main runs tier 2 with the cache, and tier 3 without it when its trigger holds.
+Each suite gets a hash over: the suite key, the hash of the runner, the filters file without its `flaky` list, the setup script and the lock files (so a new pinned tool, browser or dependency is a change), with the project's version left out in its four places (the manifest's version field, the lock file's version field, the CHANGELOG, the version part of served asset names), so a renumber at merge reruns nothing, the selected test files, and every tracked file matching its paths as `path:sha256`, sorted. A pass stores the hash in `pass-cache.json`. When the hash equals the stored one, the suite is skipped and reported as `skipped (passed on identical code)`. Every tier uses the cache, the expensive tier and a `--release` run included: a result on identical code and identical tools is the same result, so running it again proves nothing. The packaging steps of a release always run. A suite whose result depends on something outside the repository (a live-like run against an outside service) is marked `"uncached": true` in the filters file and runs every time it is selected. `--no-cache` forces a rerun when the owner asks for one.
 
 ## Unit-test selection by import graph
 
@@ -97,7 +101,7 @@ Slow smoke sections usually wait on the application's own timers (polling floors
 
 ## Preflight
 
-Before anything runs, the runner checks what the planned steps need and prints every problem with its fix. Nothing runs when a problem exists:
+Before anything runs, the runner checks what the planned steps need and prints every problem with its fix. A problem found here is the BLOCKED verdict caught before the start, which is why it has its own exit code. Nothing runs when a problem exists:
 
 ```text
 BLOCKED before the start (nothing ran):
@@ -111,6 +115,7 @@ Checks: runtime version at or above the minimum; build dependencies installed wh
 ## Database and server hygiene
 
 - Every run gets its own database, dropped and created again (`<project>_test_run`). The database named in the project's `.env` is never touched.
+- A change to the schema or its migrations runs the end-to-end suite (its paths include them), so the baseline always matches the schema.
 - When the end-to-end suite does not run, the run database is loaded from the baseline dump the last passing end-to-end run left on a fresh database, so the smokes have data to work with. A passing end-to-end run on a fresh database saves a new baseline.
 - The runner finds the database that belongs to this project by its program path on the known ports and never touches another project's database or server.
 - The runner starts the database only if it is down, and stops it afterwards only if this run started it (`--keep` leaves it running). The same for the test server.
@@ -122,15 +127,16 @@ Checks: runtime version at or above the minimum; build dependencies installed wh
 Only a step that failed and has a log is classified, from the last 80 lines of that log:
 
 - **BLOCKED**: the log shows an environment cause. A rate limit was hit (sign-in, registration or an API); a network or port error (connection refused, address in use, timeout, name lookup); the local database or server did not start or did not answer its health check; a tool is not installed; an outside service was unavailable. A blocked step is reported apart from failures, with its cause, and is never counted as a code failure. A run that could not happen stays unscored.
-- **FAILED**: everything else; the code is treated as wrong. A step whose name is on the known-flaky list is reported FAILED with the reason `a check known to fail now and then: rerun once to confirm`, runs again once without a fix, and then its result stands.
-- **not run**: a planned step that never started, with the reason.
+- **FAILED**: everything else; the code is treated as wrong.
+- **FLAKY**: a step on the known-flaky list (`flaky` in the filters file, each entry with the date and the log of the failure that put it there) that failed with no environment cause in its log runs again at once, once, without a fix. A pass on that rerun makes it FLAKY, a second failure makes it FAILED; an environment cause makes it BLOCKED, as for any step. A FLAKY step does not fail the run, does not end its lane and does not stop a merge, and is never a clean pass: it is listed in the verdict line and in the history, its run folder is kept with the failing log, and the cache stores it as a pass while the list keeps it in view. The list is a queue of steps to fix, not a place to keep them: every pull request text names its entries until each is fixed and removed. A step that is not on the list gets no automatic rerun; it goes on the list only with the log of a failure that passed on identical code.
+- **not run**: a planned step that never started, with the reason. The plan is what the filters and the flags select: a suite they leave out, or one the cache skips, is reported `skipped` with its reason and never makes a run INCOMPLETE.
 
-The verdict line lists FAILED first, then BLOCKED with causes, then not run, or prints `ALL PASSED`. The run as a whole is `FAILED` when any step failed, `BLOCKED` when none failed but a step was blocked, `INCOMPLETE` when none failed or was blocked but a planned step did not run, and `passed` otherwise. Exit codes: `0` clean, `1` anything failed, was blocked or did not run, `2` a preflight problem.
+The verdict line lists FAILED first, then BLOCKED with causes, then not run, then FLAKY, or prints `ALL PASSED`. The run as a whole is `FAILED` when any step failed, `BLOCKED` when none failed but a step was blocked, `INCOMPLETE` when none failed or was blocked but a planned step did not run, and `passed` otherwise, FLAKY steps included. Exit codes: `0` passed, `1` a step FAILED, `2` a preflight problem (nothing ran), `3` nothing failed but a step was BLOCKED or did not run. A caller tells the code from the environment by the code alone.
 
 ## Flags
 
-`--changed` (default), `--since <ref>`, `--all`, `--release`, `--dry-run`, `--no-cache`, `--keep`. Repeating the same command resumes: suites that passed are skipped by their hash, and the rest run again.
+`--changed` (default), `--since <ref>`, `--all`, `--release`, `--dry-run`, `--no-cache`, `--keep`. Repeating the same command resumes: suites that passed are skipped by their hash, and the rest run again. It is repeated after a fix or an environment fix, never to retry the same code. `--dry-run` exits `0`, or `2` when the preflight found a problem.
 
 ## The A/B rule
 
-When an update makes a check fail, change one thing at a time and compare old and new on the same input before deciding. Reruns: a suite that passed on identical code is never run again, not even to "make sure". A failed step runs again after a fix. A known flaky step runs again once without a fix, and that rerun is recorded. A blocked step runs again once the environment is fixed. `--all` and `--release` ignore the cache by design.
+When an update makes a check fail, change one thing at a time and compare the new result with the old one on the same input, the old one taken from the history rather than from a new run, before deciding. Reruns: a suite that passed on identical code is never run again, not even to "make sure". A failed step runs again after a fix. A step on the known-flaky list runs again once, at once and without a fix, and that rerun is recorded as FLAKY or FAILED. A blocked step runs again once the environment is fixed. The cache holds in every tier; only `--no-cache` and the suites marked `uncached` bypass it.

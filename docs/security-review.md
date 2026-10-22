@@ -5,7 +5,7 @@ The code check gate (`docs/code-check.md`) runs tools over the code, and the sec
 ## When a review runs
 
 - **Scoped, before the pull request**, when a change touches a trust boundary: sign-in, sessions or tokens, permissions, payments or quantities, file paths or shell commands, deserialization, a new place where outside input enters, a workflow or build file, or a model-driven agent and its tools. The review covers the diff and the paths it reaches. Its map covers only the boundaries the diff touches, its coverage list has only their rows, and its report is the line in the pull request text (which boundaries were read, what was found) plus the record of each finding.
-- **Full**, over the whole project, when the expensive test tier runs (`docs/testing.md`: before a merge that bumps the first or second number of the version or touches payments or billing) or the owner asks.
+- **Full**, over the whole project and in place of the scoped review, when the expensive test tier runs (`docs/testing.md`: before a merge that bumps the first or second number of the version or touches payments or billing) or the owner asks.
 - A review never changes the code it reviews. A fix is a change of its own, through the gate and the tests like any other, with a regression test that fails before the fix and passes after it.
 
 ## Rules of the review
