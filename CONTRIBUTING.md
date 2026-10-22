@@ -52,6 +52,7 @@ Do not reopen these; change them only when the owner says so.
 - Served assets carry their version in the file name; a query string is not enough.
 - The README is lists, in the plain register, with the install lines fixed and no version named.
 - A saved key or other secret shown in a user interface, and every password field, is hidden by default with a toggle beside it to show it; every open of the view starts hidden.
+- A web system, web app or site is tested on a Windows desktop in every browser engine, Android, iPhone and the in-app browsers of the apps users open links from, on both phones: the desktop in the default engine and Android on every change, the other profiles in the expensive tier.
 - One self-hosted git server is named as the example; hosted services stay unnamed.
 - The playbooks for 3D renders, interactive web pages, motion graphics and video, and search visibility each apply to their kind of project only, and the search page applies only to what the public reaches through search.
 

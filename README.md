@@ -22,7 +22,7 @@ A harness is everything around an AI coding agent that decides how it works: the
 
 - **Instructions** (`HARNESS.md`): the orders the agent reads first: working rules, decisions before coding, parity across copies of a product.
 - **Code check gate** (`docs/code-check.md`, `docs/tools-by-language.md`): one command before every build, package or ship: type check, linter, static security analysis, secrets scan, dependency vulnerabilities, platform analyzer, text rules.
-- **Test runner** (`docs/testing.md`): three tiers, path filters, no rerun on identical code, a preflight that prints the fix for every problem, a fresh database per run, FAILED (the code is wrong) apart from BLOCKED (the environment could not run it).
+- **Test runner** (`docs/testing.md`): three tiers, path filters, no rerun on identical code, a preflight that prints the fix for every problem, a fresh database per run, FAILED (the code is wrong) apart from BLOCKED (the environment could not run it), and for a web app or site the browsers and devices every screen must pass.
 - **Ship flow** (`docs/shipping.md`): main is production: branch, version bump, checks once, pull request, squash-merge, health check, tag; served assets carry their version in the file name; no workflow run started by hand without the owner's go.
 - **Security posture** (`docs/security.md`): passive, light and active checks of the deployed surface, and the rules before any check.
 - **Memory** (`docs/lessons.md`): lessons with a cue, the lesson and the evidence; none without evidence; retired with a date, never deleted; bounded recall; links that show their evidence.
@@ -61,7 +61,7 @@ In the first session on a project, the agent:
 
 - `HARNESS.md`: the entry file: imperative orders, about ten minutes to read.
 - `docs/code-check.md`: the gate, step by step, with what blocks.
-- `docs/testing.md`: tiers, path filters, isolation, lanes, hashing, preflight, database hygiene, verdicts, the A/B rule.
+- `docs/testing.md`: tiers, path filters, browsers and devices for a web app or site, isolation, lanes, hashing, preflight, database hygiene, verdicts, the A/B rule.
 - `docs/shipping.md`: the repository and its remote, the ten ship steps, pull request text, dependency update bot pull requests, workflow runs on the host.
 - `docs/security.md`: passive, light and active checks of the deployed surface, and the rules before any check.
 - `docs/lessons.md`: the lesson format, memory, snapshot and inbox, recall, links and retirement.

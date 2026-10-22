@@ -6,7 +6,7 @@ Fast tests that stay accurate: run what a change can reach, run it once, and tel
 
 1. **Every change** (each pull request): the code check on the changed files, plus only the suites the change reaches. A docs-only change runs no suite. A change to the runner, its filters or a check runs everything it gates. A skipped suite is not a failure. A suite that passed on identical code is not run again.
 2. **Before a merge into main** (a deploy): the same filtered run over everything changed since the last release tag (`--since <tag>`). Packaging and release builds keep the full code check gate.
-3. **The expensive tier**, weekly or when the owner asks (for example before a big or money-related release): every suite (`--all`), browser engine checks, persona walkthroughs and live-like runs.
+3. **The expensive tier**, weekly or when the owner asks (for example before a big or money-related release): every suite (`--all`), browser engine checks, the device profiles a web app or site owes its users (below), persona walkthroughs and live-like runs.
 
 The pull request says which tier ran and what was skipped. Nothing needs a hosted CI service: the same runner runs on the developer's machine or in a cloud session.
 
@@ -21,6 +21,7 @@ A filters file maps each suite to the paths it covers:
     "unit-server":   { "paths": ["server/src/**", "server/test/**"] },
     "end-to-end":    { "paths": ["server/src/**", "server/tools/e2e/**"] },
     "web-smoke":     { "paths": ["server/src/web/**", "web/**"] },
+    "web-devices":   { "paths": ["server/src/web/**", "web/**"], "expensive": true },
     "app-unit":      { "paths": ["app/lib/**", "app/test/**"], "full": ["app/pubspec.*", "app/assets/**"] }
   }
 }
@@ -31,8 +32,37 @@ Decision, in order:
 1. `--release` means `--all` plus the packaging steps. `--all` runs every suite and ignores the pass cache.
 2. Otherwise the changed set is the diff against the merge base with main (so a branch's commits count, not only uncommitted work), or against `<ref>` with `--since <ref>`, plus uncommitted and untracked files, minus the `ignore` globs. Nothing left means no suite runs.
 3. If the runner or the filters file changed, every suite runs: a change to the gate runs what it gates.
-4. Otherwise a suite runs when a changed path matches one of its `paths` globs (`**` is any depth, `*` stays inside one folder).
+4. Otherwise a suite runs when a changed path matches one of its `paths` globs (`**` is any depth, `*` stays inside one folder). A suite marked `expensive` is left to `--all` and `--release`, whatever changed.
 5. The code check step is added whenever a file changed; the check command decides which of its steps the files reach (the text rules for docs, the full set for code).
+
+## Browsers and devices for a web app or site
+
+A web system, a web app or a site is used from whatever browser its users already have, so its browser suites prove every screen on all of them. This applies to every project with a web front end; a native app, an API or a command-line tool skips it.
+
+Every current browser runs on one of three engines: the one most desktop browsers and Android share (the default engine below), the one every browser on an iPhone uses, and a third with its own desktop browser. The targets:
+
+- **A Windows desktop** in all three engines. An engine renders the same on any operating system, so one desktop stands in for all of them, and the profile may run on any machine the runner has: Windows is the user agent and the window size, because that is where most desktop users are.
+- **Android**, in the default engine.
+- **iPhone**, in its own engine.
+- **The in-app browsers** of the social and messaging apps the users open links from, each on Android and on iPhone: one profile per app per phone, and the project's instruction file names the apps. They open links with the app's own user agent, a smaller viewport, and without some features the normal browsers have.
+
+How they run:
+
+- The end-to-end tool runs each target as a profile: engine, viewport, touch, pixel ratio and user agent. The profiles live in the test setup, pinned like any other tool, and the preflight checks that the browser binaries are installed.
+- Every change runs two profiles, the desktop in the default engine and Android: they belong to the suite the filters file maps to the front-end paths (`web-smoke` above). The expensive tier runs the rest (`web-devices` above, marked `expensive`): iPhone, the in-app profiles, and the desktop in the two other engines.
+- The desktop profile also runs the checks that do not depend on the device: both appearances where the project has them, and reduced motion on. The other profiles run once, in the default appearance.
+- A feature the in-app browsers lack is tested by the fallback: the suite stubs the feature as missing in the in-app profiles and asserts the screen's alternative appears.
+- A pass on an emulated profile is the normal evidence. A difference that depends on the real operating system or device (fonts, scrollbars, file and date pickers, a keyboard that covers a field, a safe area) is a hand check on the real thing when a change touches it or the owner asks, and its result goes into the pull request text like any other hand check.
+- A screen that fails on any profile is FAILED, with the profile named in the step. It is never excused as a known limitation of that browser.
+
+What every screen must pass on every profile:
+
+- No horizontal scroll at the profile's width, with a 16 pixel side gutter on phones.
+- Text fields with a font size of at least 16 pixels, so a phone does not zoom in when a field gets focus.
+- The device's safe areas respected: nothing under a notch, a home bar or the in-app browser's own top and bottom bars.
+- Touch targets of at least 24 by 24 CSS pixels on the phones; on the desktop, every control reached by the tab key with a visible focus state.
+- No feature the in-app browsers lack is used without a fallback: file download, sharing, the clipboard, pop-up windows, notifications, sign-in in a pop-up. The screen says what it cannot do instead of failing silently.
+- Readable in both appearances where the project has them, and no motion when the device asks for reduced motion.
 
 ## Isolated suites
 

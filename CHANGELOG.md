@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0 (2026-10-22)
+
+- `HARNESS.md` section 5: a new order, a web system, web app or site is tested on every browser its users have: a Windows desktop in every browser engine, Android, iPhone, and the in-app browsers of the social and messaging apps users open links from, on both phones, so every screen works in any browser on any operating system. The desktop profile in the default engine and the Android profile run on every change; iPhone, the in-app profiles and the other desktop engines run in the expensive tier. A failure on one profile is FAILED, never a known limitation.
+- `docs/testing.md`: a new section with the detail: the three engines and the profiles, why one desktop stands in for every desktop operating system, how each target runs as a pinned profile in the end-to-end tool (engine, viewport, touch, pixel ratio, user agent), the split across the tiers with a suite marked `expensive` in the filters file (a decision rule says such a suite is left to `--all` and `--release`), the fallback test for features the in-app browsers lack, when a difference is a hand check on a real device, and what every screen must pass on every profile (no horizontal scroll, 16 pixel fields, safe areas, touch targets, fallbacks, both appearances, reduced motion).
+- `README.md`, `CONTRIBUTING.md`: the summary lines and the decisions already taken say the same.
+
 ## 1.4.0 (2026-10-21)
 
 - `HARNESS.md` section 2: a new working rule, keys and passwords are hidden on screen. Where the product's user interface shows a saved key, token or other secret, takes one in, or takes a password, the field hides the value by default and a toggle beside it shows it and hides it again; the toggle works by keyboard and has a name a screen reader reads; every open of the view starts hidden and the shown state is never saved; a copy control may copy without showing.
