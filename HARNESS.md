@@ -1,4 +1,4 @@
-# BinaryPH AI Harness 1.5.0
+# BinaryPH AI Harness 1.6.0
 
 Standing orders for an AI coding agent working on a software project. Read this file whole, once, before any work. State which harness version you follow when you first report. This file lives at `https://github.com/Binary-PH/harness.md`; the `docs/` paths below are relative to it, at the same tag or commit as this file, and a section ends with the page that holds its details, where one exists.
 
@@ -66,7 +66,7 @@ Tiers, by what the change reaches:
 
 1. **Every change**: the code check on the changed files, plus only the suites the change reaches (path filters: folders to suites). A docs-only change runs no suite. A change to the runner, its filters or a check runs everything it gates. A skipped suite is not a failure. A suite that passed on identical code is not run again.
 2. **Before a merge into main**: the same filtered run over everything since the last release tag.
-3. **The expensive tier** (every suite, browser engine checks, the device profiles of a web app or site, persona walkthroughs, live-like runs): weekly or when the owner asks.
+3. **The expensive tier** (every suite, browser engine checks, the device profiles of a web app or site, persona walkthroughs, live-like runs, the full security review of the code): weekly or when the owner asks.
 
 **A web system, web app or site is tested on every browser its users have.** Its browser suites cover a Windows desktop in every browser engine, Android, iPhone, and the in-app browsers of the social and messaging apps users open links from, on both phones, so every screen works in any browser on any operating system. Every change runs the desktop profile in the default engine and the Android profile; the expensive tier runs iPhone, the in-app profiles and the other desktop engines. A screen that fails on one profile is FAILED, not a known limitation. Details: `docs/testing.md`.
 
@@ -92,7 +92,11 @@ Details: `docs/testing.md`.
 
 ## 6. Security posture
 
-The gate covers the code; this covers the deployed surface.
+The gate runs tools over the code, the review below reads the code, and the checks after it cover the deployed surface.
+
+**A security review of the code** follows the code from where outside input enters to where it does damage, for what no scanner reports: the wrong permission checked, a step that can be skipped, an export that carries too much. Scoped to the diff before a pull request that touches a trust boundary (sign-in, sessions, permissions, payments, files or shell, deserialization, a new input surface, a workflow file, a model's tools); full when the owner asks, before a big or money-related release, and with the expensive tier. Source and a sandbox only, never the deployed system. A finding names the actor, the input, the control, the path, who is affected and the smallest observed result, each with file and line, and a reader who did not hunt it (another agent, or the finder later from the record alone) tries to disprove it. Three verdicts: confirmed (the only one with a severity), needs validation (the path is real but one decisive fact lives outside the repository; the record names it and the safe way the owner observes it), rejected (kept, so the claim is not raised again without new evidence). Coverage is a list, one row per entry surface, boundary and class of flaw, with a state per row; a sentence is not coverage. A clean review reports zero findings and the list. The fix is a change of its own, with a regression test. Details: `docs/security-review.md`.
+
+The deployed surface:
 
 - **Passive checks on your own domain, any time**: SPF, DKIM and DMARC (a `p=none` policy only monitors), every hostname in certificate logs is one you mean to run, no dangling CNAME, no secrets in the repository or its history, no keys or internal endpoints in the public bundle, no source maps in production, cloud storage not public.
 - **Light checks with the owner's OK**: zone transfer refused; `/.git`, `/.env`, backups and config files answer 404 or 403; no directory listing; no public admin or debug panel; security headers present and no version leaks; cross-origin rules strict; TLS 1.2 or newer with a valid chain; a rate brake in front of sign-in and forms; generic error pages.
@@ -107,9 +111,9 @@ Main is production: every merge into it is built and installed.
 
 1. Branch `<agent>/<topic>` from an up-to-date main. Never work on main.
 2. Bump the version (a small change bumps the third number, a mid-size change the second, a large change the first) in the manifest, in the lock file where it carries the version, in the CHANGELOG and in the file names of served assets. Apps that changed get their bump in the same task.
-3. Checks once: the changed-files gate before each commit, then the filtered suites since the last release tag (no tag yet means everything). BLOCKED means fix the environment and rerun the suites.
+3. Checks once: the changed-files gate before each commit, then the filtered suites since the last release tag (no tag yet means everything), and the scoped security review when the change touched a trust boundary (section 6). BLOCKED means fix the environment and rerun the suites.
 4. Snapshot context, if the project keeps memory or lessons in the repository.
-5. Pull request text: what changed, why, which tier ran, what was skipped, the version change.
+5. Pull request text: what changed, why, which tier ran, what was skipped, the security review when one ran, the version change.
 6. Squash-merge only when the checks pass and the owner approved. Read the merge result; delete the branch only when it says merged. A refusal is reported, not retried.
 7. Verify the production health endpoint shows the new version. If not, read the deploy log first; say which version is live.
 8. Tag the merge commit `v<version>` and push the tag, once the new version is live. A version that never went live is not tagged.

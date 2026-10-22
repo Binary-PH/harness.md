@@ -6,7 +6,7 @@ Fast tests that stay accurate: run what a change can reach, run it once, and tel
 
 1. **Every change** (each pull request): the code check on the changed files, plus only the suites the change reaches. A docs-only change runs no suite. A change to the runner, its filters or a check runs everything it gates. A skipped suite is not a failure. A suite that passed on identical code is not run again.
 2. **Before a merge into main** (a deploy): the same filtered run over everything changed since the last release tag (`--since <tag>`). Packaging and release builds keep the full code check gate.
-3. **The expensive tier**, weekly or when the owner asks (for example before a big or money-related release): every suite (`--all`), browser engine checks, the device profiles a web app or site owes its users (below), persona walkthroughs and live-like runs.
+3. **The expensive tier**, weekly or when the owner asks (for example before a big or money-related release): every suite (`--all`), browser engine checks, the device profiles a web app or site owes its users (below), persona walkthroughs, live-like runs and the full security review of the code (`docs/security-review.md`).
 
 The pull request says which tier ran and what was skipped. Nothing needs a hosted CI service: the same runner runs on the developer's machine or in a cloud session.
 

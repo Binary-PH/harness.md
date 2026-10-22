@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.0 (2026-10-22)
+
+- `docs/security-review.md`: a new page, the security review of the code: what a reader finds and a tool does not. When it runs (scoped to the diff before a pull request that touches a trust boundary; full when the owner asks, before a big or money-related release, and with the expensive tier). Its rules: source and a sandbox only, never the deployed system; what the repository does not show is unknown, not assumed; a finding is checked by a reader who did not hunt it; findings are records and the report is derived from them; no padding. The six things a finding names, each with file and line, and the smallest fix with a regression test. Three verdicts kept apart: confirmed (the only one with a severity), needs validation (one decisive fact outside the repository, with the owner's safe check), rejected (kept). Severity anchors from critical to informational, capped by the observed impact. A coverage list of entry surface by boundary by class as the claim, with a gap pass by a fresh reader and the next review starting from the last list. The classes of flaw to read for, and the classes per kind of project. The report's parts.
+- `HARNESS.md` section 6: a new order, the review summarised, with the section now covering the tools, the review and the deployed surface. Section 5: the full review is named in the expensive tier. Section 7: the scoped review is a check of step 3 and the pull request text carries it when one ran.
+- `docs/testing.md`, `docs/shipping.md`, `docs/security.md`, `README.md`, `CONTRIBUTING.md`: the tier, ship step 3 and the pull request text, the split between gate, review and periodic review, the summary lines and the decisions already taken say the same.
+
 ## 1.5.0 (2026-10-22)
 
 - `HARNESS.md` section 5: a new order, a web system, web app or site is tested on every browser its users have: a Windows desktop in every browser engine, Android, iPhone, and the in-app browsers of the social and messaging apps users open links from, on both phones, so every screen works in any browser on any operating system. The desktop profile in the default engine and the Android profile run on every change; iPhone, the in-app profiles and the other desktop engines run in the expensive tier. A failure on one profile is FAILED, never a known limitation.

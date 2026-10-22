@@ -55,6 +55,7 @@ Do not reopen these; change them only when the owner says so.
 - A web system, web app or site is tested on a Windows desktop in every browser engine, Android, iPhone and the in-app browsers of the apps users open links from, on both phones: the desktop in the default engine and Android on every change, the other profiles in the expensive tier.
 - One self-hosted git server is named as the example; hosted services stay unnamed.
 - The playbooks for 3D renders, interactive web pages, motion graphics and video, and search visibility each apply to their kind of project only, and the search page applies only to what the public reaches through search.
+- The security review of the code reads source and runs code in a sandbox only; it never touches the deployed system, which stays with the three levels of the security posture page. Only a confirmed finding carries a severity; a needs validation record names its missing fact and carries none; a rejected record is kept. A finding is checked by a reader who did not hunt it.
 
 ## Memory and the inbox
 
