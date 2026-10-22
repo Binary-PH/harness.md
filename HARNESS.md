@@ -1,4 +1,4 @@
-# BinaryPH AI Harness 1.4.0
+# BinaryPH AI Harness 1.5.0
 
 Standing orders for an AI coding agent working on a software project. Read this file whole, once, before any work. State which harness version you follow when you first report. This file lives at `https://github.com/Binary-PH/harness.md`; the `docs/` paths below are relative to it, at the same tag or commit as this file, and a section ends with the page that holds its details, where one exists.
 
@@ -66,7 +66,9 @@ Tiers, by what the change reaches:
 
 1. **Every change**: the code check on the changed files, plus only the suites the change reaches (path filters: folders to suites). A docs-only change runs no suite. A change to the runner, its filters or a check runs everything it gates. A skipped suite is not a failure. A suite that passed on identical code is not run again.
 2. **Before a merge into main**: the same filtered run over everything since the last release tag.
-3. **The expensive tier** (every suite, browser engine checks, persona walkthroughs, live-like runs): weekly or when the owner asks.
+3. **The expensive tier** (every suite, browser engine checks, the device profiles of a web app or site, persona walkthroughs, live-like runs): weekly or when the owner asks.
+
+**A web system, web app or site is tested on every browser its users have.** Its browser suites cover a Windows desktop in every browser engine, Android, iPhone, and the Facebook and Messenger in-app browsers on both phones, so every screen works in any browser on any operating system. Every change runs the desktop profile in the default engine and the Android profile; the expensive tier runs iPhone, the four in-app profiles and the other desktop engines. A screen that fails on one profile is FAILED, not a known limitation. Details: `docs/testing.md`.
 
 How a run works:
 
