@@ -36,7 +36,7 @@ The version is in the title of `HARNESS.md` and in `CHANGELOG.md`, and this repo
 5. **Bump the version** in the `HARNESS.md` title and write the CHANGELOG entry, in the same commit.
 6. **Commit** as `<version>: <summary>`, author BinaryPH. In a session that is not the owner's machine, set the author before the first commit: the name BinaryPH and the email the existing commits carry (`git log -1 --format=%ae`). No co-author trailer, no generated-with line, no session link, in the commit or in the pull request. A commit body, when there is one, says what changed and why.
 7. **Pull request**: what changed, why, which checks ran and which were skipped, the version change. No trailer of any kind.
-8. **The owner approves and merges** (ship step 6). After the squash-merge: an annotated tag `v<version>` on the merge commit, pushed, and the branch deleted, by whoever still has the repository open, the cloud session if it is, else the owner. A cloud session tends to skip both; the owner checks for them.
+8. **The owner approves and merges** (ship step 6). After the squash-merge: an annotated tag `v<version>` on the merge commit, pushed, and the branch deleted, by whoever still has the repository open, the cloud session if it is, else the owner. A cloud session tends to skip both; the owner checks for them. A release is not finished until its tag is pushed: an agent's update check reads the newest tag. Before any change, `git ls-remote --tags origin` shows the tag for the version in the `HARNESS.md` title on main; a missing one is created on that merge commit first, which is not moving a tag.
 9. **Never** a workflow file, a force push, a moved tag or a deleted branch that is not yours, without the owner's word.
 
 ## Decisions already taken
@@ -47,7 +47,9 @@ Do not reopen these; change them only when the owner says so.
 - One rerun rule: never a suite that passed on identical code; once for a known flaky step; after a fix for a failed or blocked step; the expensive tier and a release run ignore the cache.
 - A push of a working branch, a pull request, a merge into main and the release tag are the ship flow and need no extra go; everything else on the host waits for the owner.
 - A lesson proved wrong is retired by renaming its file with the date, never removed and never edited.
-- "Nothing else is downloaded" excepts the runtime, the database engine, git and an authorized security check's tools.
+- "Nothing else is downloaded" excepts the runtime, the database engine, git, an authorized security check's tools and a newer release of the harness itself.
+- A project's copy of the harness is brought to the latest release by the agent in the first report of each session (the release tags read with git, then a depth-1 clone). No go is needed and no switch turns it off: everyone follows the latest release.
+- The expensive tier runs on events, never on a calendar: before a merge that bumps the first or second number of the version or touches payments or billing, and when the owner asks. The full security review of the code runs with it; the review of the deployed surface runs once that release is live, and after a change to DNS, hosting, certificates or mail settings. A project's copy brought to a new release ships as its own pull request and bumps the project's third number, as a dependency update does.
 - The version bump is by the size of the change, as above.
 - Served assets carry their version in the file name; a query string is not enough.
 - The README is lists, in the plain register, with the install lines fixed and no version named.

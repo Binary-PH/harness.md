@@ -24,7 +24,7 @@ A harness is everything around an AI coding agent that decides how it works: the
 - **Code check gate** (`docs/code-check.md`, `docs/tools-by-language.md`): one command before every build, package or ship: type check, linter, static security analysis, secrets scan, dependency vulnerabilities, platform analyzer, text rules.
 - **Test runner** (`docs/testing.md`): three tiers, path filters, no rerun on identical code, a preflight that prints the fix for every problem, a fresh database per run, FAILED (the code is wrong) apart from BLOCKED (the environment could not run it), and for a web app or site the browsers and devices every screen must pass.
 - **Ship flow** (`docs/shipping.md`): main is production: branch, version bump, checks once, pull request, squash-merge, health check, tag; served assets carry their version in the file name; no workflow run started by hand without the owner's go.
-- **Security posture** (`docs/security.md`): passive, light and active checks of the deployed surface, and the rules before any check.
+- **Security posture** (`docs/security-posture.md`): passive, light and active checks of the deployed surface, and the rules before any check.
 - **Security review of the code** (`docs/security-review.md`): a reader follows the code from where input enters to where it does damage; source and a sandbox only; a finding names the actor, the input, the control, the path, who is affected and the observed result; a fresh reader tries to disprove it; confirmed, needs validation and rejected kept apart; a coverage list as the claim.
 - **Memory** (`docs/lessons.md`): lessons with a cue, the lesson and the evidence; none without evidence; retired with a date, never deleted; bounded recall; links that show their evidence.
 - **Playbooks** (`docs/playbooks.md` and the four pages under `docs/playbooks/`): decisions before coding, WordPress, 3D renders from an image, interactive web pages, motion graphics and video, search visibility for web apps and sites.
@@ -45,13 +45,13 @@ Read HARNESS.md at https://github.com/Binary-PH/harness.md and follow it for thi
 Read HARNESS.md in this repo and follow it.
 ```
 
-Some tools can import a file with a line that reads `@HARNESS.md` (from a subfolder, `@<subfolder>/HARNESS.md`); check the tool's documentation. A copy is frozen: replace it to take a newer release.
+Some tools can import a file with a line that reads `@HARNESS.md` (from a subfolder, `@<subfolder>/HARNESS.md`); check the tool's documentation. A copy keeps itself current: in the first report of each session the agent checks for a newer release and, when there is one, replaces the copy and says what changed.
 
 ## First use
 
 In the first session on a project, the agent:
 
-1. Reads `HARNESS.md` and states which version it follows. The project's instruction file points at the harness without a version number, so the next session reads the latest release, or the copy in the project.
+1. Reads `HARNESS.md` and states which version it follows. The project's instruction file points at the harness without a version number, so the next session reads the latest release, or the copy in the project, which the agent brings to the latest release first.
 2. Puts the code in git with a remote the owner controls, if it is not there yet.
 3. Sets up the environment with the best tools for the job, only those that fit the project's languages, pinned.
 4. Writes the project's own check command and test runner from the specs, in the project's language, and wires the check into the build scripts.
@@ -64,7 +64,7 @@ In the first session on a project, the agent:
 - `docs/code-check.md`: the gate, step by step, with what blocks.
 - `docs/testing.md`: tiers, path filters, browsers and devices for a web app or site, isolation, lanes, hashing, preflight, database hygiene, verdicts, the A/B rule.
 - `docs/shipping.md`: the repository and its remote, the ten ship steps, pull request text, dependency update bot pull requests, workflow runs on the host.
-- `docs/security.md`: passive, light and active checks of the deployed surface, and the rules before any check.
+- `docs/security-posture.md`: passive, light and active checks of the deployed surface, and the rules before any check.
 - `docs/security-review.md`: the security review of the code: when it runs, its rules, the six things a finding names, the three verdicts, severity, coverage, the classes of flaw, the report.
 - `docs/lessons.md`: the lesson format, memory, snapshot and inbox, recall, links and retirement.
 - `docs/playbooks.md`: decisions before coding; WordPress; pointers to the four playbooks.

@@ -28,7 +28,7 @@ Applies to anything the public reaches through a search engine or an AI answer e
 ## 4. URLs, security and mobile
 
 - URLs are descriptive, lowercase and hyphenated, carry no parameters for content, use the trailing slash consistently, stay under about 100 characters, and mirror the site's structure in their folders.
-- HTTPS everywhere with a valid chain and no mixed content, plus the headers from `docs/security.md`. A page that fights the back button through history manipulation is a critical finding.
+- HTTPS everywhere with a valid chain and no mixed content, plus the headers from `docs/security-posture.md`. A page that fights the back button through history manipulation is a critical finding.
 - A viewport tag, a responsive layout, no horizontal scroll, touch targets of at least 24 by 24 CSS pixels, a base font of about 16 pixels.
 - Parity between the mobile and desktop versions: the same primary content, the same robots tag, the same title and description, the same structured data. Primary content is never behind a tap, and never lazy-loaded in a way that needs an interaction to appear; native lazy loading of images below the fold is fine. No full-page interstitial; a small banner or a legal dialog is fine.
 
@@ -63,7 +63,7 @@ Applies to anything the public reaches through a search engine or an AI answer e
 - **Local**: the name, address and phone number identical everywhere they appear; the business profile complete with current fields; reviews answered. One location page per real location; past 30 location pages, each needs at least 60 percent unique content; past 50, stop until the owner justifies them.
 - **Shop**: product markup with offer, price and availability in the first HTML; faceted navigation kept out of the index (noindex on filtered pages, or a canonical to the unfiltered page); a generated product image carries the source-type metadata the merchant platform requires.
 - **Publisher**: article markup, author pages, topic clusters around pillar pages, visible dates.
-- **Product**: pricing, features, docs and integrations pages indexable, with the docs rendered on the server. A generated API reference and schema introspection stay behind sign-in (`docs/security.md`).
+- **Product**: pricing, features, docs and integrations pages indexable, with the docs rendered on the server. A generated API reference and schema introspection stay behind sign-in (`docs/security-posture.md`).
 - **Programmatic pages** (many pages from one template): each page holds unique value or it is not indexed; thin ones are merged or marked noindex.
 
 ## 9. The audit and the report
@@ -82,4 +82,4 @@ Applies to anything the public reaches through a search engine or an AI answer e
 - A test that fetches the raw HTML of the key pages headless and asserts the title, the description, the canonical, the robots tag, the structured data and the primary content are present before any script runs.
 - A sitemap test: every listed URL answers 200, is canonical and is indexable; the robots file names the sitemap. It runs against the staging copy, or against production at a capped rate.
 - On a site whose content is written in Markdown, the test filters map the content folder to the raw-HTML and sitemap tests, so a content change is not a docs-only change.
-- A lab run of the paint and layout metrics on the key pages in the expensive tier (`docs/testing.md`), failing at the thresholds in section 5, with the interaction metric read from field data; the periodic security review (`docs/security.md`) adds the robots, sitemap and redirect checks.
+- A lab run of the paint and layout metrics on the key pages in the expensive tier (`docs/testing.md`), failing at the thresholds in section 5, with the interaction metric read from field data; the review of the deployed surface (`docs/security-posture.md`) adds the robots, sitemap and redirect checks.

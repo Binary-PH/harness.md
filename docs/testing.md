@@ -6,7 +6,7 @@ Fast tests that stay accurate: run what a change can reach, run it once, and tel
 
 1. **Every change** (each pull request): the code check on the changed files, plus only the suites the change reaches. A docs-only change runs no suite. A change to the runner, its filters or a check runs everything it gates. A skipped suite is not a failure. A suite that passed on identical code is not run again.
 2. **Before a merge into main** (a deploy): the same filtered run over everything changed since the last release tag (`--since <tag>`). Packaging and release builds keep the full code check gate.
-3. **The expensive tier**, weekly or when the owner asks (for example before a big or money-related release): every suite (`--all`), browser engine checks, the device profiles a web app or site owes its users (below), persona walkthroughs, live-like runs and the full security review of the code (`docs/security-review.md`).
+3. **The expensive tier**, before a merge that bumps the first or second number of the version or touches payments or billing, and when the owner asks: every suite (`--all`), browser engine checks, the device profiles a web app or site owes its users (below), persona walkthroughs, live-like runs and the full security review of the code (`docs/security-review.md`). It never runs on a calendar: a run over code that did not change proves nothing new. The cost of that choice: a long run of third-number releases leaves the device profiles unrun until a larger release or the owner's ask.
 
 The pull request says which tier ran and what was skipped. Nothing needs a hosted CI service: the same runner runs on the developer's machine or in a cloud session.
 
@@ -78,7 +78,7 @@ A server lane (database, server, API suites, web smokes) and an app lane (unit t
 
 ## No rerun on identical code
 
-Each suite gets a hash over: the suite key, the hash of the runner and the filters file, the selected test files, and every tracked file matching its paths as `path:sha256`, sorted. A pass stores the hash in `pass-cache.json`. When the hash equals the stored one, the suite is skipped and reported as `skipped (passed on identical code)`. `--no-cache` forces a rerun. A `--release` run (packaged artifacts) always runs everything; a merge into main runs tier 2 with the cache.
+Each suite gets a hash over: the suite key, the hash of the runner and the filters file, the selected test files, and every tracked file matching its paths as `path:sha256`, sorted. A pass stores the hash in `pass-cache.json`. When the hash equals the stored one, the suite is skipped and reported as `skipped (passed on identical code)`. `--no-cache` forces a rerun. A `--release` run (packaged artifacts) always runs everything; a merge into main runs tier 2 with the cache, and tier 3 without it when its trigger holds.
 
 ## Unit-test selection by import graph
 

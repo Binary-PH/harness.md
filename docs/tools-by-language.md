@@ -1,6 +1,6 @@
 # Tools by language
 
-Install the best tool for each need: the row for the languages the project uses, plus the cross-language rows, or an equivalent that fits the project better, with the reason noted. Nothing outside those rows is downloaded, apart from what the project itself needs to run (the runtime, the database engine, git) and what an authorized security check needs (`docs/security.md`). A cell that says none leaves that gate row out for the language; it is not a `NOT INSTALLED` row. Pin every version in the project's setup script so the preflight can report a drift.
+Install the best tool for each need: the row for the languages the project uses, plus the cross-language rows, or an equivalent that fits the project better, with the reason noted. Nothing outside those rows is downloaded, apart from what the project itself needs to run (the runtime, the database engine, git), what an authorized security check needs (`docs/security-posture.md`), and a newer release of the harness itself (`HARNESS.md` section 1). A cell that says none leaves that gate row out for the language; it is not a `NOT INSTALLED` row. Pin every version in the project's setup script so the preflight can report a drift.
 
 ## Per language
 

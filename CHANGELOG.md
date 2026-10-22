@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.8.0 (2026-10-23)
+
+- `HARNESS.md` section 1: a new order, a project's copy of the harness stays at the latest release. In the first report of each session the agent reads the release tags with git, compares the newest with the version in the title, and when it is newer replaces `HARNESS.md` and its pages in `docs/` from a depth-1 clone of that tag (removing the pages the release dropped, never a file the harness did not bring), reads the new file, and reports the old and new version with the CHANGELOG entries between them. The replacement ships as its own pull request and bumps the project's third number, as a dependency update does, and a release that changes the gate or the runner brings the project's check command and runner in line in a change of their own. No go is needed, because everyone follows the latest release. Without git or a network it reports `update not checked`. Reading the file from its address needs no check. Section 4 and `docs/tools-by-language.md`: the harness's own release joins the downloads allowed.
+- `HARNESS.md` section 5 and `docs/testing.md`: the expensive tier runs on events, not weekly: before a merge that bumps the first or second number of the version or touches payments or billing, and when the owner asks; never on a calendar, because a run over code that did not change proves nothing new. The cost: a long run of third-number releases leaves the device profiles unrun until a larger release or the owner's ask.
+- `HARNESS.md` section 7 and `docs/shipping.md`: step 3 names the expensive tier among the checks when its trigger holds, and step 7 runs the checks of the deployed surface once a release that tier gated is live.
+- `HARNESS.md` section 6, `docs/security-review.md`, `docs/security-posture.md`, `docs/playbooks/web-seo.md`: the full security review of the code runs with the expensive tier or when the owner asks; the periodic review is now the review of the deployed surface, run once a release the expensive tier gated is live and after a change to DNS, hosting, certificates or mail settings.
+- `docs/security.md` is renamed `docs/security-posture.md`, so its name says what its title says and is not read as the general security page beside `docs/security-review.md`. Every reference follows.
+- `README.md`, `CONTRIBUTING.md`: the copy, first use and decisions already taken say the same; the release procedure adds that a release is not finished until its tag is pushed, and that a missing tag is created on its merge commit before the next change.
+
 ## 1.7.0 (2026-10-22)
 
 - `HARNESS.md` section 1: a new order, the project's instruction file points at the harness by its address, or at the project's copy, and writes no harness version. The version followed is the one in the title of the file read; a number in the instruction file goes stale with the next release and can be read as a pin, so an agent skips the orders added since.
