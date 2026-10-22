@@ -44,12 +44,12 @@ Every current browser runs on one of three engines: the one most desktop browser
 - **A Windows desktop** in all three engines. An engine renders the same on any operating system, so one desktop stands in for all of them, and the profile may run on any machine the runner has: Windows is the user agent and the window size, because that is where most desktop users are.
 - **Android**, in the default engine.
 - **iPhone**, in its own engine.
-- **The Facebook and Messenger in-app browsers**, each on Android and on iPhone: four profiles. They open links with the app's own user agent, a smaller viewport, and without some features the normal browsers have.
+- **The in-app browsers** of the social and messaging apps the users open links from, each on Android and on iPhone: one profile per app per phone, and the project's instruction file names the apps. They open links with the app's own user agent, a smaller viewport, and without some features the normal browsers have.
 
 How they run:
 
 - The end-to-end tool runs each target as a profile: engine, viewport, touch, pixel ratio and user agent. The profiles live in the test setup, pinned like any other tool, and the preflight checks that the browser binaries are installed.
-- Every change runs two profiles, the desktop in the default engine and Android: they belong to the suite the filters file maps to the front-end paths (`web-smoke` above). The expensive tier runs the other seven (`web-devices` above, marked `expensive`): iPhone, the four in-app profiles, and the desktop in the two other engines.
+- Every change runs two profiles, the desktop in the default engine and Android: they belong to the suite the filters file maps to the front-end paths (`web-smoke` above). The expensive tier runs the rest (`web-devices` above, marked `expensive`): iPhone, the in-app profiles, and the desktop in the two other engines.
 - The desktop profile also runs the checks that do not depend on the device: both appearances where the project has them, and reduced motion on. The other profiles run once, in the default appearance.
 - A feature the in-app browsers lack is tested by the fallback: the suite stubs the feature as missing in the in-app profiles and asserts the screen's alternative appears.
 - A pass on an emulated profile is the normal evidence. A difference that depends on the real operating system or device (fonts, scrollbars, file and date pickers, a keyboard that covers a field, a safe area) is a hand check on the real thing when a change touches it or the owner asks, and its result goes into the pull request text like any other hand check.

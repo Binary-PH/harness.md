@@ -68,7 +68,7 @@ Tiers, by what the change reaches:
 2. **Before a merge into main**: the same filtered run over everything since the last release tag.
 3. **The expensive tier** (every suite, browser engine checks, the device profiles of a web app or site, persona walkthroughs, live-like runs): weekly or when the owner asks.
 
-**A web system, web app or site is tested on every browser its users have.** Its browser suites cover a Windows desktop in every browser engine, Android, iPhone, and the Facebook and Messenger in-app browsers on both phones, so every screen works in any browser on any operating system. Every change runs the desktop profile in the default engine and the Android profile; the expensive tier runs iPhone, the four in-app profiles and the other desktop engines. A screen that fails on one profile is FAILED, not a known limitation. Details: `docs/testing.md`.
+**A web system, web app or site is tested on every browser its users have.** Its browser suites cover a Windows desktop in every browser engine, Android, iPhone, and the in-app browsers of the social and messaging apps users open links from, on both phones, so every screen works in any browser on any operating system. Every change runs the desktop profile in the default engine and the Android profile; the expensive tier runs iPhone, the in-app profiles and the other desktop engines. A screen that fails on one profile is FAILED, not a known limitation. Details: `docs/testing.md`.
 
 How a run works:
 
