@@ -15,9 +15,9 @@ Every step below assumes a git repository with a remote the owner controls. A pr
 
 1. **Branch.** Work on `<agent>/<topic>`, never on main. Start from an up-to-date main (`git switch main && git pull --ff-only`).
 2. **Bump the version.** A small change (a fix, wording, a dependency update) bumps the third number. A mid-size change (a feature, a new rule or page) bumps the second. A large change (a rewrite, a break in what users rely on) bumps the first. The numbers after the bumped one reset to 0: from 1.0.0 that is 1.0.1, 1.1.0 or 2.0.0. Update the manifest, the lock file where it carries the version, and the CHANGELOG. If an app changed, bump its version as well, in the same task. Static assets the project serves get the new version, or a content hash, in their file names, with every reference updated, so no cache serves a stale copy; a query string on an unchanged name is not enough.
-3. **Run the checks once.** The changed-files code check before each commit (`check --changed --gate`), then the filtered suites since the last release tag (`test --since <tag>`, `docs/testing.md`; no tag yet means everything). BLOCKED means fix the environment and rerun the suites. Never rerun a suite that passed on identical code.
+3. **Run the checks once.** The changed-files code check before each commit (`check --changed --gate`), then the filtered suites since the last release tag (`test --since <tag>`, `docs/testing.md`; no tag yet means everything), and the scoped security review when the change touched a trust boundary (`docs/security-review.md`). BLOCKED means fix the environment and rerun the suites. Never rerun a suite that passed on identical code.
 4. **Snapshot context**, if the project keeps memory or lessons in the repo (`docs/lessons.md`).
-5. **Open a pull request** that says what changed, why, which test tier ran and what was skipped. No co-author line and no "generated with" line.
+5. **Open a pull request** that says what changed, why, which test tier ran and what was skipped, and, when the change touched a trust boundary, which boundaries the security review read and what it found (`docs/security-review.md`). No co-author line and no "generated with" line.
 6. **Squash-merge** through the platform's API with the title `<title> (#<number>)`, only when the checks pass and the owner approved. Read the result: delete the branch only when the response says the merge happened. If the merge is refused, say so and stop.
 7. **Verify.** Poll the production health endpoint until it shows the new version (usually one to two minutes). If it does not, read the deploy log before anything else. A failed build leaves the old version running; say which version is live.
 8. **Tag** the merge commit `v<version>` (annotated) and push the tag, once the new version is live. A version that never went live is not tagged.
@@ -30,6 +30,7 @@ Every step below assumes a git repository with a remote the owner controls. A pr
 What changed: <one paragraph>
 Why: <the request or the problem>
 Tests: tier <1|2|3>; ran <suites>; skipped <suites and why>; code check: clean | <n> reviewed false positives
+Security review: none, no trust boundary touched | scoped: <boundaries read>; <n> confirmed, <n> need validation
 Version: <old> to <new>
 ```
 

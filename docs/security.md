@@ -1,6 +1,6 @@
 # Security posture: check your own attack surface
 
-The code check gate (`docs/code-check.md`) covers the code. This page covers what the deployed project shows to the world: its domains, mail records, certificates, headers, exposed files and ports. Run these checks on your own project the way an attacker's reconnaissance would, so the gaps are found first by you.
+The code check gate (`docs/code-check.md`) runs tools over the code and the security review (`docs/security-review.md`) reads it. This page covers what the deployed project shows to the world: its domains, mail records, certificates, headers, exposed files and ports. Run these checks on your own project the way an attacker's reconnaissance would, so the gaps are found first by you.
 
 ## Rules before any check
 
@@ -70,4 +70,4 @@ The code check gate (`docs/code-check.md`) covers the code. This page covers wha
 - One folder per target, findings grouped by area (mail, subdomains, web, hosts, secrets), plus a ranked hot list of what to fix first.
 - A marker per finished step, so a rerun continues where it stopped. A diff mode reports only what is new since the last run.
 - A tool that keeps failing is skipped and reported, not retried forever.
-- What belongs in the gate: secrets, dependency vulnerabilities, static analysis, build settings (source maps off). What belongs in a periodic review: DNS, headers, TLS, exposure, versions. Schedule the review with the expensive test tier (`docs/testing.md`).
+- What belongs in the gate: secrets, dependency vulnerabilities, static analysis, build settings (source maps off). What belongs in the security review of the code (`docs/security-review.md`): the flaws a reader finds and a tool does not, over the diff when a change touches a trust boundary and over the whole project in the full review. What belongs in a periodic review: DNS, headers, TLS, exposure, versions. Schedule the periodic review and the full code review with the expensive test tier (`docs/testing.md`).
