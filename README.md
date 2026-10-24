@@ -49,20 +49,20 @@ Every task runs the same loop, and each step has its page:
 1. **Read.** The agent reads `HARNESS.md` whole at the start of a session and states the version it follows. A copy kept in a project brings itself to the latest release first.
 2. **Plan.** It restates the ask. For a feature, a new project or a change that is hard to undo, it also researches how others solve the same problem and writes a plan: goal, non-goals, success criteria, the approach, the options that lost, the risks with the way back. The plan is cut into thin vertical slices, the riskiest first. A new project, or a change that is hard to undo, waits for the owner's go; a small fix is its own one slice.
 3. **Build.** One slice at a time. A change in behaviour starts with a test seen failing; a bug fix starts with the test that reproduces it.
-4. **Check.** One command runs the type check, the linter, static security analysis, a secrets scan, the dependency scan, the platform analyzer and the text rules. A missing tool or an unreadable result blocks; a step already clean on identical files is skipped and says so.
+4. **Check.** One command runs the type check, the linter, static security analysis, a secrets scan, the dependency scan, the platform analyzer and the text rules. A missing tool or an unreadable result never passes. It checks each commit's files, runs the dependency scan and whole-project type checks before the merge, and checks everything once per release build.
 5. **Test.** The runner runs only the suites a change reaches, never a suite that passed on identical code, and keeps FAILED (the code is wrong) apart from BLOCKED (the environment could not run it) and FLAKY (a listed flaky test that passed on its one rerun).
 6. **Review.** The agent reads its own diff for correctness, plainness, fit, cost and leftovers, and for any check made easier to pass. A change across a trust boundary also gets a security review of the code. Both come before the checks that run before the merge, so a fix they bring is checked once.
 7. **Ship.** Branch, version bump, checks once, pull request, squash-merge, health check, tag. A broken release is reverted through the same flow before it is debugged.
 8. **Learn.** Up to three lessons per task, each with a cue and its evidence, recalled when a later task matches the cue.
 
-Nothing here runs on every prompt. The setup runs once per project and the reading once per session; a question runs nothing; a change runs only the checks and suites it reaches; the ship steps run once per task, on one branch and one pull request; the expensive tier runs only on its events; and nothing already proven on identical input runs again.
+Nothing here runs on every prompt. The setup runs once per project and the reading once per session; a question runs nothing; a change runs only the checks and suites it reaches; the ship steps run once per task, on one branch and one pull request; the expensive tier runs only on its events; and nothing already proven on identical input runs again, apart from the full gate once per release build.
 
 ## What a harness is made of
 
 - **Instructions** (`HARNESS.md`): the orders the agent reads first: working rules, planning and building in slices, parity across copies of a product.
 - **Planning** (`docs/planning.md`): the order of decisions before coding, research into how large organisations and reputable open-source projects do it, the documentation of the version in use, the plan, slices, decision records.
-- **Code check gate** (`docs/code-check.md`, `docs/tools-by-language.md`): one command before every build, package or ship: type check, linter, static security analysis, secrets scan, dependency vulnerabilities, platform analyzer, text rules; no step run twice on identical files.
-- **Test runner** (`docs/testing.md`): three tiers, path filters, no rerun on identical code, a preflight that prints the fix for every problem, a fresh database per run, FAILED, BLOCKED and FLAKY told apart by verdict and by exit codes that tell the code from the environment, how to write a test and debug a failure, and for a web app or site the browsers and devices every screen must pass.
+- **Code check gate** (`docs/code-check.md`, `docs/tools-by-language.md`): one command before every build, package or ship: type check, linter, static security analysis, secrets scan, dependency vulnerabilities, platform analyzer, text rules; each commit's files before the commit, the dependency scan and whole-project type checks before the merge, and everything once per release build.
+- **Test runner** (`docs/testing.md`): three tiers, path filters, no rerun on identical code, a preflight that prints the fix for every problem, the test tools' own caching first, a fresh database per run where the project has one, FAILED, BLOCKED and FLAKY told apart by verdict and by exit codes that tell the code from the environment, how to write a test and debug a failure, and for a web app or site the browsers and devices every screen must pass.
 - **Review of the diff** (`docs/code-review.md`): the tests first, five points, no check made easier to pass, a size a reader can hold, a second reader for a change that is hard to undo.
 - **Ship flow** (`docs/shipping.md`): main is production: branch, version bump, checks once, pull request, squash-merge, health check, tag; changes a running version must survive and the way back; served assets carry their version in the file name; no workflow run started by hand without the owner's go.
 - **Security posture** (`docs/security-posture.md`): passive, light and active checks of the deployed surface, and the rules before any check.
@@ -105,10 +105,10 @@ In the first session on a project, the agent:
 <details>
 <summary>Every file in this repository, with what it holds</summary>
 
-- `HARNESS.md`: the entry file: imperative orders, about ten minutes to read.
+- `HARNESS.md`: the entry file: short imperative orders, each pointing to the page to read when its situation comes.
 - `docs/planning.md`: how much planning a change needs, the order of decisions, the research, the plan's headings, slices, where the plan lives, decision records.
-- `docs/code-check.md`: the gate, step by step, with what blocks and when a step is skipped on identical files.
-- `docs/testing.md`: tiers, path filters, browsers and devices for a web app or site, isolation, lanes, hashing, writing tests, preflight, database hygiene, verdicts, debugging a failure, the A/B rule.
+- `docs/code-check.md`: the gate, step by step, with what blocks and when it runs.
+- `docs/testing.md`: tiers, the filters file, no result twice, browsers and devices for a web app or site, writing tests, isolation, database hygiene, lanes, preflight, verdicts, logs, debugging a failure.
 - `docs/code-review.md`: the review of the diff: when, tests first, five points, no check made easier to pass, size, a second reader.
 - `docs/shipping.md`: the repository and its remote, the ten ship steps, pull request text, changes a running version must survive, the way back, dependency update bot pull requests, workflow runs on the host.
 - `docs/security-posture.md`: passive, light and active checks of the deployed surface, and the rules before any check.
