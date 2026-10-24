@@ -4,7 +4,7 @@ What a kind of project needs before and while it is built. Planning itself (the 
 
 ## WordPress sites and plugins
 
-- Add `phpcs` with the WordPress coding standards and the PHP compatibility standard to the gate. Errors block, warnings are reported.
+- Add `phpcs` with the WordPress coding standards and the PHP compatibility standard to the gate, under the linter policy (`docs/code-check.md`): its security sniffs are the platform analyzer, and the findings phpcbf would fix are the formatting check.
 - Escape on output, sanitise on input, a nonce on every action, a capability check on every privileged action, prepared statements for every query.
 - Every plugin or theme zip gets a new version (the third, second or first number by the size of the change) and the version, or a content hash, in the file name of every asset it serves, so no cache serves a stale copy.
 - Keep the static security analysis and secrets scan from the gate; they cover PHP as well.

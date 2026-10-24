@@ -6,9 +6,9 @@ Install the best tool for each need: the row for the languages the project uses,
 
 | Language | Type check | Linter | Formatter | Platform analyzer | Test tool | Lock file for the dependency scan |
 | -------- | ---------- | ------ | --------- | ----------------- | ----------- | --------------------------------- |
-| TypeScript, JavaScript | the TypeScript compiler with `--noEmit`, strict | ESLint (flat config) with the typed rules and the security plugin | Prettier | framework rule sets inside ESLint | the project's runner (the built-in test runner, or Vitest or Jest) | `package-lock.json`, `pnpm-lock.yaml` or `yarn.lock` |
+| TypeScript, JavaScript | the TypeScript compiler with `--noEmit`, strict | ESLint (flat config) with the typed rules and the security plugin | Prettier | none: the framework rule sets run in the linter row | the project's runner (the built-in test runner, or Vitest or Jest) | `package-lock.json`, `pnpm-lock.yaml` or `yarn.lock` |
 | Python | mypy or pyright, strict | ruff (error, pyflakes, bugbear and security rule sets) | ruff format or black | none: ruff's security rule set in the linter row does that work | pytest | `uv.lock`, `poetry.lock` or a pinned `requirements.txt` |
-| Go | the compiler and `go vet` | golangci-lint with staticcheck | gofmt | gosec | `go test` | `go.sum` |
+| Go | the compiler and `go vet` | golangci-lint with staticcheck, its style checks off and its vet and gosec runs left to their rows | gofmt | gosec (every finding as an error) | `go test` | `go.mod` |
 | Dart, Flutter | the Dart analyzer with strict modes in `analysis_options.yaml` | the analyzer's lint set for Flutter | `dart format` | `flutter analyze` (the analyzer's own warnings block) | `flutter test` | `pubspec.lock` |
 | PHP, WordPress | phpstan (level 6 or higher) | phpcs with the PHP compatibility standard, plus the WordPress coding standards for WordPress projects | phpcbf | the WordPress standards' security sniffs (escaping, nonces, prepared statements) | phpunit | `composer.lock` |
 | Rust | `cargo check` | clippy | rustfmt | none: the dependency step reads the same advisories a lock-file audit would | `cargo test` | `Cargo.lock` |

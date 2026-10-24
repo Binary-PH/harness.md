@@ -1,4 +1,4 @@
-# BinaryPH AI Harness 2.0.1
+# BinaryPH AI Harness 2.1.0
 
 Standing orders for an AI coding agent working on a software project. Read this file whole, once per session, before any work, and state which harness version you follow when you first report. This file lives at `https://github.com/Binary-PH/harness.md`. A section that has a page under `docs/` names it and the moment to read it: read that page each time before doing the work it covers. The `docs/` paths are relative to this file (in the repository, at the same tag or commit; in a project's copy, the `docs/` folder beside it).
 
@@ -57,22 +57,22 @@ Read `docs/code-check.md` and `docs/tools-by-language.md` before building or cha
 One command runs these steps, in this order, for the languages the project has:
 
 1. **Type check**, whole project, strict. Any error blocks.
-2. **Linter**: bug and unsafe-pattern rules as errors, style rules as warnings. Errors block.
-3. **Static security analysis** (a rule-based multi-language analyser) with the packs for the language and, where the project has what they cover, the web top-ten risks, cross-site scripting, SQL injection and the security audit set. ERROR severity blocks.
+2. **Linter**: errors are the rules the linter itself classes as catching bugs plus the unsafe-pattern rules; style rules are warnings, reported; the formatter runs in check mode. Errors and a formatting difference block.
+3. **Static security analysis** (a rule-based multi-language analyser) with the packs for the language and, where the project has what they cover, the web top-ten risks, cross-site scripting, SQL injection and the security audit set. ERROR severity blocks; lower severities are reported.
 4. **Secrets** (a secrets scanner over the tracked files, and over the history once, when the gate is first built; the build scripts also scan what they build). Any finding blocks.
-5. **Dependency vulnerabilities** (a lock-file vulnerability scanner over every lock file). A severity score of 7.0 or more blocks.
+5. **Dependency vulnerabilities** (a lock-file vulnerability scanner over every lock file). A severity score of 7.0 or more blocks; a finding without a score takes its aliases' highest or, with none, blocks until reviewed; a malicious package always blocks, is removed and is reported to the owner at once.
 6. **Platform analyzer** from the tools table (the Dart analyzer, the WordPress standards' security sniffs, and so on). Errors block; warnings block only where the tools table says so, otherwise they are reported.
 7. **Text rules**: em dash and en dash scan over tracked text files outside vendored folders. Any hit blocks.
 
-Two rules never let a check pass silently: a tool that is not installed reads `NOT INSTALLED` with its setup hint, and a tool that gave no readable output also blocks. A tool that could not run is reported apart from findings, with its own exit code, and a finding on the list the owner accepted on adoption (section 10) is reported, not blocking (`docs/code-check.md`).
+What blocks is the minimum: a project's stricter setting stays, its instruction file pointing at it, and is never lowered to match. Two rules never let a check pass silently: a tool that is not installed reads `NOT INSTALLED` with its setup hint, and a tool that gave no readable output also blocks. A tool that could not run is reported apart from findings, with its own exit code, and a finding on the list the owner accepted on adoption (section 10) is reported, not blocking (`docs/code-check.md`).
 
 When it runs, each step once at each moment:
 
-- **Before each commit**: `check --uncommitted --gate`, over the files the commit changes, with the type check of each changed file's language over all its files; the dependency step waits for the merge. A change to the check command, a tool's configuration or the setup script runs the full gate instead.
+- **Before each commit**: `check --uncommitted --gate`, over the files the commit changes, with the type check of each changed file's language over all its files and the dependency step over a lock file changed other than in its version field. A change to the check command, a tool's configuration or the setup script runs the full gate instead.
 - **Before the merge**: `check --merge --gate`, which runs only what can have a new answer: the dependency step over every lock file, and the type check and the type-aware lint rules over the whole project, since main may have moved and a changed type can break a file nobody touched. Each commit's files were already checked.
 - **In the build and package scripts**: the full gate, `check --gate`, once per release build; it is the one run over every file, by design.
 
-A reviewed false positive gets a `Reviewed (code check): <why>` comment plus the tool's own marker, never a blanket disable.
+A reviewed false positive gets a `Reviewed (code check): <why>` comment plus the tool's own marker (for a dependency, an entry in the scanner's ignore file with the reason and an expiry date), never a blanket disable.
 
 ## 5. Testing
 

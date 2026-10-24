@@ -2,6 +2,8 @@
 
 One command reports every problem a tool can find in the code and stops the build when a blocking problem exists. The build, package and release scripts call it themselves, so nobody can forget it. This page says what the command runs, in what order, when, and what blocks.
 
+What blocks here is the minimum. A project whose settings are already stricter (more lint rules, warnings that block, a lower severity score) keeps them, and its instruction file says so, pointing at the configuration that sets them (`HARNESS.md` section 1); a setting is never lowered to match this page.
+
 ## The command
 
 Build it once per project, in the language of the project's main server or build tooling (one language for the checker, even when the project has several), and name it plainly (for example `tools/check`). It takes:
@@ -19,10 +21,10 @@ The report is one row per tool: the tool, its status, the count of findings, and
 | # | Step | Finds | How | Blocks when |
 | - | ---- | ----- | --- | ----------- |
 | 1 | Type check | type errors | the language's type checker over the whole project, strict settings, no output files | any error, or the checker did not run |
-| 2 | Linter | bugs and unsafe patterns, not style | the language's linter with the policy below, JSON output | an error-level finding; warnings are reported only |
-| 3 | Static security analysis | injection, cross-site scripting, framework pitfalls | a multi-language static analyser (Semgrep or equivalent) with the registry packs for the language and, where the project has what they cover, the web top-ten risks, cross-site scripting, SQL injection and the security audit set (secrets are step 4's); metrics off; a timeout per rule; dependency, build, data and vendored folders and minified files excluded | an ERROR-severity finding, or no readable output |
-| 4 | Secrets | keys, tokens, passwords, private keys | a secrets scanner (Gitleaks or equivalent) over the tracked files, and over the git history once, when the gate is first built (after that, every commit's files are scanned before they enter it), with redacted output and the exit code ignored so the gate decides itself; the allow-list holds only dependency folders, build output (the build scripts scan it themselves, below), data folders, the ignored env file and files that are public by design | any finding |
-| 5 | Dependency vulnerabilities | known vulnerable versions | a vulnerability scanner (OSV-Scanner or equivalent) over every lock file | a finding with a severity score of 7.0 or higher; lower scores are reported |
+| 2 | Linter | bugs and unsafe patterns, and code the formatter would change | the language's linter with the policy below, JSON output, and the formatter from the tools table in check mode | an error-level finding or a formatting difference; warnings are reported only |
+| 3 | Static security analysis | injection, cross-site scripting, framework pitfalls | a multi-language static analyser (Semgrep or equivalent) with the registry packs for the language and, where the project has what they cover, the web top-ten risks, cross-site scripting, SQL injection and the security audit set (secrets are step 4's); metrics off; a timeout per rule; dependency, build, data and vendored folders and minified files excluded | an ERROR-severity finding, or no readable output; lower severities are reported |
+| 4 | Secrets | keys, tokens, passwords, private keys | a secrets scanner (Gitleaks or equivalent) over the tracked files, and over the git history once, when the gate is first built (after that, every commit's files are scanned before they enter it), with redacted output and the exit code ignored so the gate decides itself; the allow-list holds only dependency folders, build output (the build scripts scan it themselves, below), data folders, the ignored env file and files that are public by design | any finding; a hit in the history is reported to the owner, who rotates the key, and then, with the owner's go, goes into the scanner's baseline file, since the history is not rewritten without the owner's word |
+| 5 | Dependency vulnerabilities | known vulnerable versions | a vulnerability scanner (OSV-Scanner or equivalent) over every lock file | a finding with a severity score of 7.0 or higher, lower scores reported; a finding without a score takes the highest score among its aliases and, with none, blocks until reviewed: the dependency is upgraded or removed when the advisory applies, and recorded as reviewed (below) when it does not; a malicious-package advisory blocks whatever its score and never goes on an ignore or adoption list: the agent removes the package, installs nothing more and reports to the owner at once, who decides on rotating the secrets that machine held |
 | 6 | Platform analyzer | errors the platform's own analyzer knows | the analyzer from the tools table (`docs/tools-by-language.md`): the Dart analyzer for Flutter, the WordPress standards' security sniffs for WordPress, and so on | errors, or no parsed output; warnings only where the tools table says so |
 | 7 | Text rules | em dash (U+2014) and en dash (U+2013); the normal dash (hyphen-minus, U+002D) is allowed and never scanned | read every tracked text file; skip binaries (any NUL byte) and vendored folders; write the code points in the checker's source so it passes its own check | any hit; the report tells where and how to rewrite the sentence, with the normal dash where a dash is needed |
 
@@ -40,10 +42,10 @@ A tool that could not run (not installed, or stopped by an environment cause suc
 Each step once at each moment:
 
 - **Before each commit**: `check --uncommitted --gate`. Only the steps the changed files reach run, by kind of file:
-  - code files: the type check of that language over all its files (a change can break a file it did not touch), the linter, the static security analysis and the text rules;
+  - code files: the type check of that language over all its files (a change can break a file it did not touch), the linter and the formatter's check, the static security analysis and the text rules;
   - platform files: the platform analyzer;
   - every changed file: the secrets scan;
-  - a lock file or a manifest, other than in its version field: the type check and the linter of that language, since a new dependency can break the code that uses it; the dependency scan waits for the merge;
+  - a lock file or a manifest, other than in its version field: the type check and the linter of that language, since a new dependency can break the code that uses it, and the dependency scan over a changed lock file, so a vulnerable or malicious package is found while the task is open;
   - shell scripts, container files and Markdown: their linters (`docs/tools-by-language.md`) and the text rules;
   - other text files, docs included: the text rules.
 
@@ -51,21 +53,24 @@ Each step once at each moment:
 - **Before the merge**: `check --merge --gate`: the dependency step over every lock file, since a new advisory appears without a change to the code, and the type check and the type-aware lint rules over the whole project, since main may have moved and a changed type can break a file nobody touched. The other steps already ran on each commit's files and do not run again.
 - **In the build and package scripts**: the full gate, `check --gate`, once per release build. It is the one run over every file, by design: the rules and the advisories it applies may be newer than the commits it covers.
 
-The command keeps no cache of its own; the caches the tools already have (an incremental type check, a linter's cache) speed it up.
+The command keeps no cache of its own; the caches the tools already have (an incremental type check, a linter's cache) speed it up, except a per-file lint cache for the type-aware rules, which read types across files and run without it.
 
 ## Findings accepted on adoption
 
-A project that takes on the harness with many findings may, with the owner's go, record them in a list beside the check command (`known-findings.json`: the tool, the rule, the file and a fingerprint of the flagged line). A finding on the list is reported, not blocking; it leaves the list when it is fixed, and the list only shrinks. Every finding not on it blocks as usual. Where a tool has its own way to record such a list, the command uses it.
+A project that takes on the harness with many findings may, with the owner's go, record them in a list beside the check command (`known-findings.json`: the tool, the rule, the file and a fingerprint of the flagged line). A finding on the list is reported, not blocking; it leaves the list when it is fixed, and the list only shrinks. Every finding not on it blocks as usual. Where a tool has its own baseline file (a list kept outside the code), the command uses it; inline markers are never used for it. Formatting differences never go on the list: a change of its own runs the formatter over the project before the list is recorded, since reformatting moves the lines the fingerprints read.
 
 ## Reviewed false positives
 
-A finding that was reviewed and is not a problem gets two things on the spot: a comment on the line above, `// Reviewed (code check): <why it is safe>`, and the tool's own suppression marker on the line. Never a blanket disable for a file or a rule, and never a suppression without the comment: the review of the diff treats one as a check made easier to pass (`docs/code-review.md`).
+A finding that was reviewed and is not a problem gets two things on the spot: a comment on the line above, `// Reviewed (code check): <why it is safe>`, and the tool's own suppression marker on the line. Never a blanket disable for a file or a rule, and never a suppression without the comment: the review of the diff treats one as a check made easier to pass (`docs/code-review.md`). For the dependency scanner, the comment and the marker are one entry in its own ignore file, with the reason and an expiry date at most 90 days out: an advisory's record and its fixed versions change, so it is read again when the entry lapses.
 
 ## Linter policy
 
-- **Errors** (block): rules that catch bugs and unsafe code. Self comparison, a loop condition that never changes, an unreachable loop, a callback that must return a value, a return in a constructor, a return in a promise executor, `eval` and implied `eval`, an assignment inside a condition (except in parentheses).
-- **Warnings** (reported, never block): style and tidiness. Unused variables, empty blocks, loose equality, variables that could be constants.
-- **Type-aware rules as errors** in typed languages: no explicit `any`, no floating promises, no misused promises (a void-returning callback is allowed), `await` only on things that can be awaited. Relax these to warnings in UI code and in tests, where the noise outweighs the catch.
+- **Errors** (block): the rules the linter itself classes as catching bugs, at least at the level it ships them (ESLint's recommended set and that of its typed rules, unused variables and empty blocks among them; rubocop's Lint department; clippy's correctness and suspicious groups), and rules that catch bugs and unsafe code beyond them. Self comparison, loose equality, a loop condition that never changes, an unreachable loop, a callback that must return a value, a return in a constructor, a return in a promise executor, `eval` and implied `eval`, an assignment inside a condition (except in parentheses).
+- **Warnings** (reported, never block): style and tidiness the formatter does not settle, such as naming, and the few noisy rules this policy names as warnings.
+- **A linter with no warning level** (ruff, golangci-lint) fails on every finding of the rules it selects. It selects its default set, its bug rules and its security rules, less the analyzers the tools table runs in another row (Go's vet and gosec); it adds no style rule beyond the sets the tools table names.
+- **Formatting** is the formatter's: it runs in check mode in this step, and a difference blocks, since the fix is to run it. Where the formatter is a separate command (Prettier, gofmt, ruff format), a linter rule it covers is off; where it is the linter's own fixer (phpcbf, rubocop autocorrect, ktlint), the findings that fixer would fix are the formatting check.
+- **Type-aware rules as errors** in typed languages: no explicit `any`, no floating promises, no misused promises (a void-returning callback, such as an event handler, is allowed), `await` only on things that can be awaited. They run with the rest of the lint on each commit's files, and once more over the whole project before the merge, from a configuration that holds only them where the linter cannot select them otherwise.
+- **Tests**: a rule whose findings are the test's own means (an `assert` statement, an explicit `any` in a mock) is off or a warning for the test folders in the linter's configuration, which is the policy, not a suppression. Floating promises stay errors there: a test that does not await its assertion passes without checking anything.
 - **Security plugin** of the linter on, with its noisiest rule (object injection) off and the file-name rule as a warning.
 - **UI framework rules**: the rules-of-hooks kind as errors, exhaustive-dependencies as a warning.
 - **Generated output is never linted.** Local tool scripts get the bug rules but no security gate.

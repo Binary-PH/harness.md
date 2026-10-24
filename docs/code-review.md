@@ -26,10 +26,11 @@ The diff is read for any check made easier to pass:
 
 - a test skipped, deleted or weakened, or an assertion removed from a test that stayed (a test removed together with the behaviour it tested is not a loosening);
 - a suppression marker without its `Reviewed (code check): <why>` comment, or a blanket disable for a file or a rule (`docs/code-check.md`);
-- a threshold or a blocking severity lowered, a gate step left out, a suite removed from the filters file or its paths narrowed;
+- a threshold or a blocking severity lowered, a linter rule turned off or moved from error to warning beyond the linter policy, a project's stricter setting lowered to the harness's, a gate step left out, a suite removed from the filters file or its paths narrowed;
+- an entry added to the list of findings accepted on adoption, or a dependency ignore entry without its reason or its expiry date;
 - a stub, an empty error handler or a to-do note where the code should be.
 
-Each one is put back, or the pull request names it with the reason and it waits for the owner's go. A reviewed false positive with its comment is not a loosening; it is the review. A step added to the known-flaky list is one: it carries its date and its log (`docs/testing.md`), and like the others it is named and waits for the owner's go.
+Each one is put back, or the pull request names it with the reason and it waits for the owner's go. A reviewed false positive with its comment, or a dependency ignore entry with its reason and expiry date, is not a loosening; it is the review. A step added to the known-flaky list is one: it carries its date and its log (`docs/testing.md`), and like the others it is named and waits for the owner's go.
 
 ## Size
 
