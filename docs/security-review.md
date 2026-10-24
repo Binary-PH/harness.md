@@ -59,7 +59,7 @@ Before the hunt, the reviewer writes a map of about a page: what the product is,
 - A hunter that meets a boundary the map lacks reports the gap instead of reviewing it; the gap becomes a row.
 - After the hunt, a fresh reader looks for what the map missed: an entry point with no row, a parallel path to a covered sink, a class left out without a reason. Its gaps become rows, and the hunt runs again over them. A full review is complete when a pass finds nothing to add, or after three gap passes, with whatever is left marked deferred and the reason; a scoped review makes one gap pass over the diff's boundaries.
 - A review that stops early marks every untouched row deferred and says so in its report. A scoped review marks everything outside its scope out of scope, never covered.
-- The next review starts from the last list: a confirmed finding whose source did not change carries over with its record, neither hunted nor checked again; a finding whose source changed is reviewed as new; needs validation, blocked and deferred rows are the first work. One review does not exhaust a project; each later review builds on the last list.
+- The next review starts from the last list: a confirmed finding whose source did not change carries over with its record, neither hunted nor checked again; a finding whose source changed is reviewed as new; needs validation, blocked and deferred rows are the first work. One review does not exhaust a project; each later review builds on the last list. A review of a revert to a release tag starts from the coverage as it stood at that tag (its last full review and the scoped reviews up to it), with the rows of the reverted code first, not from the list of the release being undone.
 
 ## Classes of flaw to read for
 
