@@ -1,15 +1,6 @@
-# Playbooks: decide before coding
+# Playbooks: what a kind of project adds
 
-What to do before the first line of code, by kind of project. The gate, the tests and the ship flow apply to every kind; this page only decides the approach.
-
-## The order of decisions
-
-1. **Understand the ask.** Restate it in one paragraph. Note what is fixed (language, platform, host) and what is open.
-2. **Research first.** Find open-source projects that do what the user wants, on code hosting sites and in package registries. Read their structure, their issues and their pitfalls. Write down, in your own words, what to take (layout, data model, tool choices) and what to avoid. Respect their licenses: ideas are free; copy no code.
-3. **Choose the stack.** Build with a modern, maintained language and framework unless the user names one. "Modern" means current major versions, typed where the language allows, with an active ecosystem. Say the choice and the reason in one sentence.
-4. **Install or use the best tools for the job.** Start from the tools table (`docs/tools-by-language.md`); take an equivalent that fits the project better when one exists and say why. Download and install only tools compatible with the chosen language and platform. A Python project gets no JavaScript tool chain, a Flutter app no PHP tooling. Pin versions in a setup script so a drift shows in the preflight.
-5. **Set up the gate and the runner** (`docs/code-check.md`, `docs/testing.md`) before the first feature, not after.
-6. **Then build**, one finished piece at a time, each checked and tested.
+What a kind of project needs before and while it is built. Planning itself (the ask, the research, the documentation of the version in use, the stack, the tools, the plan and its slices) is the same for every kind and lives on `docs/planning.md`; the gate, the tests and the ship flow apply to every kind as well.
 
 ## WordPress sites and plugins
 
@@ -36,4 +27,4 @@ When the project is a web app, a site or any page a search engine or an answer e
 
 ## Anything else
 
-Research how it is done first (step 2 above), write the approach in a few lines, then apply the same gate, tests and ship flow. Do not invent a method when a proven one exists.
+Research how it is done first (`docs/planning.md`, the order of decisions), write the approach into the plan, then apply the same gate, tests and ship flow. Do not invent a method when a proven one exists.

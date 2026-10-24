@@ -6,7 +6,7 @@ The code check gate (`docs/code-check.md`) runs tools over the code, and the sec
 
 - **Scoped, before the pull request**, when a change touches a trust boundary: sign-in, sessions or tokens, permissions, payments or quantities, file paths or shell commands, deserialization, a new place where outside input enters, a workflow or build file, or a model-driven agent and its tools. The review covers the diff and the paths it reaches. Its map covers only the boundaries the diff touches, its coverage list has only their rows, and its report is the line in the pull request text (which boundaries were read, what was found) plus the record of each finding.
 - **Full**, over the whole project and in place of the scoped review, when the expensive test tier runs (`docs/testing.md`: before a merge that bumps the first or second number of the version or touches payments or billing) or the owner asks.
-- A review never changes the code it reviews. A fix is a change of its own, through the gate and the tests like any other, with a regression test that fails before the fix and passes after it.
+- A review never changes the code it reviews while it reviews it. A confirmed finding in the change under review blocks its merge and is fixed in that pull request, as a commit of its own; a finding in code the change did not touch is fixed in a change of its own. Either way the fix goes through the gate and the tests like any other, with a regression test that fails before the fix and passes after it. The review runs first in ship step 3, before the review of the diff and the merge's test runs, so its fix is read by the one and checked by the other once.
 
 ## Rules of the review
 
@@ -57,9 +57,9 @@ Before the hunt, the reviewer writes a map of about a page: what the product is,
 
 - Rows are worked in this order of precedence: changed code before code already covered, then the least trusted entry first, then the most valuable resource first (credentials, other tenants' data, code execution, release authority).
 - A hunter that meets a boundary the map lacks reports the gap instead of reviewing it; the gap becomes a row.
-- After the hunt, a fresh reader looks for what the map missed: an entry point with no row, a parallel path to a covered sink, a class left out without a reason. Its gaps become rows, and the hunt runs again over them. A full review is complete when a pass finds nothing to add; a scoped review makes one gap pass over the diff's boundaries.
+- After the hunt, a fresh reader looks for what the map missed: an entry point with no row, a parallel path to a covered sink, a class left out without a reason. Its gaps become rows, and the hunt runs again over them. A full review is complete when a pass finds nothing to add, or after three gap passes, with whatever is left marked deferred and the reason; a scoped review makes one gap pass over the diff's boundaries.
 - A review that stops early marks every untouched row deferred and says so in its report. A scoped review marks everything outside its scope out of scope, never covered.
-- The next review starts from the last list: a confirmed finding whose source did not change is checked again, not hunted again; a finding whose source changed is reviewed as new; needs validation, blocked and deferred rows are the first work. One review does not exhaust a project; each later review builds on the last list.
+- The next review starts from the last list: a confirmed finding whose source did not change carries over with its record, neither hunted nor checked again; a finding whose source changed is reviewed as new; needs validation, blocked and deferred rows are the first work. One review does not exhaust a project; each later review builds on the last list.
 
 ## Classes of flaw to read for
 
@@ -90,7 +90,7 @@ Where the map shows one of these, read for its own classes as well:
 
 ## The report
 
-Derived from the records after the fresh readers have passed:
+Derived from the records after the second readers and the gap passes have run:
 
 1. Scope (scoped or full), the commit reviewed, whether the tree was dirty, and what the sandbox could and could not run.
 2. A one-paragraph summary of the posture.

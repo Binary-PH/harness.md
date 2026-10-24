@@ -4,7 +4,7 @@ Install the best tool for each need: the row for the languages the project uses,
 
 ## Per language
 
-| Language | Type check | Linter | Formatter | Platform analyzer | Test runner | Lock file for the dependency scan |
+| Language | Type check | Linter | Formatter | Platform analyzer | Test tool | Lock file for the dependency scan |
 | -------- | ---------- | ------ | --------- | ----------------- | ----------- | --------------------------------- |
 | TypeScript, JavaScript | the TypeScript compiler with `--noEmit`, strict | ESLint (flat config) with the typed rules and the security plugin | Prettier | framework rule sets inside ESLint | the project's runner (the built-in test runner, or Vitest or Jest) | `package-lock.json`, `pnpm-lock.yaml` or `yarn.lock` |
 | Python | mypy or pyright, strict | ruff (error, pyflakes, bugbear and security rule sets) | ruff format or black | bandit | pytest | `uv.lock`, `poetry.lock` or a pinned `requirements.txt` |

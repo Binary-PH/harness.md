@@ -71,15 +71,15 @@ Applies to anything the public reaches through a search engine or an AI answer e
 - Measure only what can be measured. "Not measured" is a status, never a pass, and a score covers only measured categories, with the checks behind it shown.
 - Each finding is critical (blocks indexing or risks a penalty: fix now), high (within a week), medium (within a month) or low (backlog).
 - Each recommendation carries four things: the observation it rests on, what it depends on or unblocks, how we would know it failed, and a leading indicator the owner can watch without a new audit.
-- Keep a baseline snapshot (index count, field metrics, rankings for the key queries) and compare after each release.
+- Keep a baseline snapshot (index count, field metrics, rankings for the key queries) and compare after each release that changed public pages.
 - Before blaming a traffic change on an engine update: a date overlap is a hypothesis, never proof. Check the engine's status page and the site's own changes first.
 - Credentials for a search console or analytics API live in an ignored config file readable by the owner only, never in the repository.
 - An unreachable URL is reported with its status; its content is never guessed.
 
 ## Checks and tests to add
 
-- To the gate, for a web project: a build-time check that every public page has a unique title, a description, one H1, a self-canonical, an alt attribute (empty only on decoration) and dimensions on every image, and valid JSON-LD.
-- A test that fetches the raw HTML of the key pages headless and asserts the title, the description, the canonical, the robots tag, the structured data and the primary content are present before any script runs.
-- A sitemap test: every listed URL answers 200, is canonical and is indexable; the robots file names the sitemap. It runs against the staging copy, or against production at a capped rate.
-- On a site whose content is written in Markdown, the test filters map the content folder to the raw-HTML and sitemap tests, so a content change is not a docs-only change.
-- A lab run of the paint and layout metrics on the key pages in the expensive tier (`docs/testing.md`), failing at the thresholds in section 5, with the interaction metric read from field data; the review of the deployed surface (`docs/security-posture.md`) adds the robots, sitemap and redirect checks.
+- A page-head suite, for the pages the public reaches through search, mapped in the filters file to the page sources and the content: after the build, it checks that every public page has a unique title, a description, one H1, a self-canonical, an alt attribute (empty only on decoration) and dimensions on every image, and valid JSON-LD. It reads the built pages, so it runs where the build already ran and is cached on them like any suite; it is not a step of the gate.
+- A test that fetches the raw HTML of the key pages headless and asserts the primary content is present before any script runs. Where pages are rendered by the server rather than built, it asserts the title, the description, the canonical, the robots tag and the structured data as well; on built pages the page-head suite already covers them.
+- A sitemap test: every listed URL answers 200, is canonical and is indexable; the robots file names the sitemap. It runs against the staging copy; a project without one leaves the sitemap to the checks of the deployed surface below, so production is checked once.
+- On a site whose content is written in Markdown, the test filters map the content folder to the page-head, raw-HTML and sitemap suites and keep it out of the `ignore` globs, so a content change is not a docs-only change.
+- A lab run of the paint and layout metrics on the key pages in the expensive tier (`docs/testing.md`), failing at the thresholds in section 5, with the interaction metric read from field data; the checks of the deployed surface (`docs/security-posture.md`) add the robots, sitemap and redirect checks.

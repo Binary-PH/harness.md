@@ -49,7 +49,7 @@ Put the reference and the render side by side in one image and judge that image.
 
 ## 9. Budget and performance
 
-- Set the triangle budget up front: about 6,000 for a low tier, about 60,000 for standard, more only for a hero shot. Decimate per part when over budget, in the optimisation pass.
+- Set the triangle budget up front: about 6,000 for a light version, about 60,000 for standard, more only for a hero shot. Decimate per part when over budget, in the optimisation pass.
 - Record draw calls and triangle counts from the renderer after each pass.
 - Optimise only after the look is approved; a fast wrong model is still wrong.
 

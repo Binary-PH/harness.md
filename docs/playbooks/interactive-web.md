@@ -32,13 +32,13 @@ Scroll-driven, animated or 3D web pages: a hero with a model or a scene, section
 
 - Every control reachable by keyboard, with a visible focus state. Every image and model has a text alternative that says what it shows; a purely decorative image has an empty one.
 - Screen readers get the content in reading order, independent of the visual motion.
-- Contrast holds in both light and dark appearance.
+- Text stays readable on its background (`HARNESS.md` section 2), above all text laid over the moving scene or a model: it gets a backing that holds the contrast in every frame of the scroll.
 
 ## 6. Performance budget
 
 - Set a budget before building: first render time, total transfer on a phone connection, and no visible jank while scrolling.
 - Lazy-load everything below the fold: models, videos, large images. Preload only what the hero needs.
-- Test at phone width with a 16 pixel side gutter and no horizontal scroll; test with the device's reduced-motion setting on.
+- Phone width with a 16 pixel side gutter, no horizontal scroll and the reduced-motion setting are covered by the browser profiles every web screen passes (`docs/testing.md`); the page gets no second test for them.
 - Measure, do not guess: take the numbers from the browser's performance tools and keep them with the page.
 
 ## 7. Iterate with observable feedback
@@ -48,4 +48,4 @@ Give and ask for feedback that names what is seen: which body part, which shot, 
 ## Checks and tests to add
 
 - The gate's linter, type check and static analysis cover the page code; the secrets scan covers the built bundle.
-- A smoke test loads the page headless, scrolls to each section, checks that the expected elements are visible, and fails when the transfer size or the model's triangle count exceeds the budget.
+- A smoke test in the desktop profile's suite, so it shares that page load, scrolls to each section, checks that the expected elements are visible, and fails when the transfer size or the model's triangle count exceeds the budget.
