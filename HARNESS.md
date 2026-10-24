@@ -1,4 +1,4 @@
-# BinaryPH AI Harness 2.0.0
+# BinaryPH AI Harness 2.0.1
 
 Standing orders for an AI coding agent working on a software project. Read this file whole, once per session, before any work, and state which harness version you follow when you first report. This file lives at `https://github.com/Binary-PH/harness.md`. A section that has a page under `docs/` names it and the moment to read it: read that page each time before doing the work it covers. The `docs/` paths are relative to this file (in the repository, at the same tag or commit; in a project's copy, the `docs/` folder beside it).
 

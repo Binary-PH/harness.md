@@ -16,6 +16,17 @@ Plain Markdown only: no scripts, no workflow files, no remote includes. Public, 
 6. **No secret** anywhere, in any file or any history.
 7. **One order per situation.** Every file agrees with every other. A change that touches an order is followed, in the same change, by a read of the files that order interacts with (the page the entry file points to for that section, the README lines that summarise it, and any page that uses the same term), and any clash is resolved before the commit.
 
+## Adding to the harness
+
+A standing rule from the owner (2026-10-24): every request to add something (a technique, a rule, a page, a tool) is worked through these steps: the first five are settled before any text is written, the sixth before the commit.
+
+1. **Name what it is for.** State the mistake it prevents or the gap it fills for an agent working on a real project. What prevents no recurring mistake and fills no gap is not added.
+2. **Fit it to the logic.** Place it in what already exists: the moment it runs (what runs when, `HARNESS.md` section 1), the section and the page it belongs to, and the orders it touches. Extending an existing order comes before adding a new one, and a page read when its moment comes before the entry file.
+3. **Take what helps, skip the rest.** Split a technique into its parts and keep only those that change what an agent does. The CHANGELOG names the parts left out and why.
+4. **Settle open questions by research.** Where a choice is unclear, find how large engineering organisations and reputable open-source projects handle it, decide, and record the decision in the list below and in the CHANGELOG, naming no source (rule 1 above). A choice the list below already settles is not open; a question goes to the owner only when no one else can answer it.
+5. **Keep it lean.** No mechanism the project's tools already provide is rebuilt; no rule adds a test, a scan or a review that runs again on identical input; the entry file grows only by what an agent would otherwise get wrong.
+6. **Leave no conflict.** The reads of the release procedure's step 4 run before the commit, every finding is fixed or left with its reason, and rule 7 above holds for every order the addition touches.
+
 ## Versioning
 
 The version is in the title of `HARNESS.md` and in `CHANGELOG.md`, and this repository follows the rule it gives projects: wording or a fix bumps the third number, a new rule or page or an order that changes bumps the second, a rewrite of the orders bumps the first, and the numbers after the bumped one reset to 0.
@@ -32,7 +43,7 @@ The version is in the title of `HARNESS.md` and in `CHANGELOG.md`, and this repo
 
    The C locale makes the dash pattern match bytes; under a UTF-8 locale the same pattern finds nothing and reports a false clean. Links point only at this repository's own address, the one in the README. Then a grep for every product, brand, font or project name the change could have introduced, and a read of the diff for anything that looks like a key or a token.
 3. **Lint**: `npx --yes markdownlint-cli2 "**/*.md"` with `.markdownlint.jsonc` from the repository. If it cannot run where you are, say so in the pull request; do not skip it silently.
-4. **Cold read**: a fresh reader (a subagent, or you after a break) reads `HARNESS.md` alone and names the version, the seven gate steps, the three tiers and the FAILED, FLAKY, BLOCKED and not-run split with their exit codes. A new page gets a cold read of its own, with questions a user of that page would ask.
+4. **Cold read**: a fresh reader (a subagent, or you after a break) reads `HARNESS.md` alone and names the version, the seven gate steps, the three tiers and the FAILED, FLAKY, BLOCKED and not-run split with their exit codes. A new page gets a cold read of its own, with questions a user of that page would ask. A change to the gate or the runner also gets an implementation read: a fresh agent plans, without writing code, how it would build them for two different projects, and reports what would stop or mislead it. The rounds are set before the reads start (the reads, one fix round, one read of that round's diff), and points left after them that are only wording are checked by search. A change that leaves the text of `HARNESS.md` as it was, apart from the version in its title, needs no new cold read of it, since its text is the same input.
 5. **Bump the version** in the `HARNESS.md` title and write the CHANGELOG entry, in the same commit.
 6. **Commit** as `<version>: <summary>`, author BinaryPH. In a session that is not the owner's machine, set the author before the first commit: the name BinaryPH and the email the existing commits carry (`git log -1 --format=%ae`). No co-author trailer, no generated-with line, no session link, in the commit or in the pull request. A commit body, when there is one, says what changed and why.
 7. **Pull request**: what changed, why, which checks ran and which were skipped, the version change. No trailer of any kind.

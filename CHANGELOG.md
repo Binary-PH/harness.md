@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1 (2026-10-24)
+
+- `CONTRIBUTING.md`: a standing rule from the owner, "Adding to the harness". Every request to add something is worked through six steps, the first five before any text is written: name the mistake it prevents or the gap it fills, fit it to the harness's logic (its moment, section and page, extending before adding), keep only the parts that change what an agent does, settle open questions by researching how large engineering organisations and reputable open-source projects handle them, keep it lean (nothing the tools already provide, nothing run twice on identical input), and leave no conflict.
+- `CONTRIBUTING.md`, release step 4: a change to the gate or the runner also gets an implementation read on two different projects; the rounds of reads are set before they start; and a change that leaves the text of `HARNESS.md` as it was, apart from its version, needs no new cold read of it. The orders of `HARNESS.md` are unchanged; only its version moves.
+
 ## 2.0.0 (2026-10-24)
 
 A rewrite of the orders for simplicity, at the owner's request on 2026-10-24 ("simple yet effective, not overengineered"), after the practice of reputable agent harnesses: the always-read instruction file kept short and limited to what an agent would otherwise get wrong, details read each time their situation comes, and mechanisms the project's tools already provide used rather than rebuilt. A long list of orders is followed less well than a short one, and a hand-built cache gives a wrong answer whenever an input is missed, which is where the 1.10 to 1.12 rounds kept finding problems.
