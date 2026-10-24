@@ -4,7 +4,7 @@ Fast tests that stay accurate: run what a change can reach, run it once, and tel
 
 ## Three tiers
 
-1. **Every change** (each slice, and each update of a pull request): the code check on the changed files, plus only the suites the change reaches. A docs-only change (only files the filters `ignore`) runs no suite; content a site publishes is mapped to its suites and kept out of the `ignore` globs, so it is never docs-only. A change to a lock file, a manifest or the setup script, other than its version field, reaches every suite of its part of the project (decision 4), so a new dependency is always tested; the version bump alone reaches nothing. A change to the runner or to a check runs everything it gates; a change to the filters file runs only the suites whose own entry or files changed (decision 3). A skipped suite is not a failure. A suite that passed on identical code is not run again.
+1. **Every change** (each slice, and each update of a pull request): the code check on the changed files, plus only the suites the change reaches. A docs-only change (only files the filters `ignore`) runs no suite; content a site publishes is mapped to its suites and kept out of the `ignore` globs, so it is never docs-only. A change to a lock file or a manifest, other than its version field, reaches every suite of its part of the project, and a change to the setup script reaches every suite (decision 4), so a new dependency or tool is always tested; the version bump alone reaches nothing. A change to the runner or to a check runs everything it gates; a change to the filters file runs only the suites whose own entry or files changed (decision 3). A skipped suite is not a failure. A suite that passed on identical code is not run again.
 2. **Before a merge into main** (a deploy): the same filtered run over everything changed since the last release tag (`--since <tag>`), plus the suites marked `expensive` whose paths that change reaches; a suite marked `uncached` waits for the expensive tier. Packaging and release builds run the full code check gate, each step skipped only on identical input.
 3. **The expensive tier**, in place of tier 2 for that merge, before a merge that bumps the first or second number of the version or touches payments or billing, and when the owner asks: every suite (`--all`), the browser engine and device profiles a web app or site owes its users (below) and the persona walkthroughs among them (suites that walk the main flows as each kind of user, cached like any other), the live-like runs, and the full security review of the code (`docs/security-review.md`). It never runs on a calendar: a run over code that did not change proves nothing new. Its full security review takes the place of the scoped one.
 
@@ -19,7 +19,7 @@ A filters file maps each suite to the paths it covers:
   "ignore": ["**/*.md", "docs/**"],
   "suites": {
     "unit-server":   { "paths": ["server/src/**", "server/test/**"] },
-    "end-to-end":    { "paths": ["server/src/**", "server/tools/e2e/**"] },
+    "end-to-end":    { "paths": ["server/src/**", "server/tools/e2e/**", "config/test.json"], "env": ["APP_ENV"] },
     "web-smoke":     { "paths": ["server/src/web/**", "web/**"] },
     "web-devices":   { "paths": ["server/src/web/**", "web/**"], "expensive": true },
     "live-like":     { "paths": ["server/src/**"], "expensive": true, "uncached": true },
@@ -31,12 +31,14 @@ A filters file maps each suite to the paths it covers:
 }
 ```
 
+A file a suite reads outside its folders (a configuration file, a shared fixture) goes into its `paths`, so a change to it selects the suite and changes its hash, and the environment variables the suite reads are listed under `env`. What the entry does not name cannot clear the cache, so the entry names everything the suite depends on.
+
 Decision, in order:
 
 1. `--release` means every suite except the `uncached` ones, plus the packaging steps; the build scripts run it before a release artifact (`docs/code-check.md`, ship step 9). The `uncached` suites run in the expensive tier and when the owner asks, not with every artifact. `--all` selects every suite, the ones marked `expensive` and `uncached` included; the pass cache still skips a cached suite that passed on identical code and tools.
 2. Otherwise the changed set is the diff against the merge base with main (so a branch's commits count, not only uncommitted work), or against `<ref>` with `--since <ref>`, plus uncommitted and untracked files, minus the `ignore` globs. Nothing left means no suite runs.
 3. If the runner changed, every cached suite runs: a change to the gate runs what it gates. If the filters file changed, a cached suite is selected when its own entry changed or its hash no longer matches a pass (its files changed while the old `ignore` globs hid them). A suite whose entry and files stayed the same is not selected, an edit to the `flaky` list selects nothing, and an `uncached` suite waits for the expensive tier either way (decision 4).
-4. Otherwise a suite runs when a changed path matches one of its `paths` globs (`**` is any depth, `*` stays inside one folder). A change to a lock file, a manifest or the setup script, other than its version field, selects every suite whose paths lie in that file's folder or below it (one at the root of the repository selects every suite), and a suite whose `full` globs match runs whole. A suite marked `expensive` is left out of `--changed`: it runs with `--since <ref>` (before a merge) when its paths match, and always with `--all` and `--release`. A suite marked `uncached` runs only with `--all` (the expensive tier) and when the owner asks.
+4. Otherwise a suite runs when a changed path matches one of its `paths` globs (`**` is any depth, `*` stays inside one folder). A change to a lock file or a manifest, other than its version field, selects every suite whose paths lie in that file's folder or below it (one at the root of the repository selects every suite); a change to the setup script selects every suite wherever the script lives, since it installs the tools of all of them; and a suite whose `full` globs match runs whole. A suite marked `expensive` is left out of `--changed`: it runs with `--since <ref>` (before a merge) when its paths match, and always with `--all` and `--release`. A suite marked `uncached` runs only with `--all` (the expensive tier) and when the owner asks.
 5. The code check step is added whenever a file changed; the check command decides which of its steps the files reach (the text rules for docs, the full set for code) and skips a step that came out clean on identical files, and a lock file already clean that day (`docs/code-check.md`).
 
 ## Browsers and devices for a web app or site
@@ -84,7 +86,13 @@ A server lane (database, server, API suites, web smokes) and an app lane (unit t
 
 ## No rerun on identical code
 
-Each suite gets a hash over: the suite key, the hash of the runner, the suite's own entry in the filters file (not the rest of it: the `ignore` globs change which suites a diff selects, not what a suite's result is, so adding or editing another suite, the `ignore` globs or the `flaky` list reruns nothing by itself), the setup script, the manifests and the lock files (so a new pinned tool, browser or dependency is a change), with the project's version left out in its four places (the manifest's version field, the lock file's version field, the CHANGELOG, the version part of served asset names), so a renumber at merge reruns nothing, the selected test files, and every file matching its paths, tracked or untracked but not ignored (so a new file not yet committed counts), as `path:sha256`, sorted. A pass adds the hash to the suite's set in `pass-cache.json`; the set keeps the hashes of the last three release tags and of every pass since, so switching back to code that passed, a revert included, reruns nothing. When the hash is in the set, the suite is skipped and reported as `skipped (passed on identical code)`. Every tier uses the cache, the expensive tier and a `--release` run included: a result on identical code and identical tools is the same result, so running it again proves nothing. The packaging steps of a release always run. A suite whose result depends on something outside the repository (a live-like run against an outside service) is marked `"uncached": true` in the filters file and runs every time it is selected. `--no-cache` forces a rerun when the owner asks for one.
+Each suite gets a hash over: the suite key, the hash of the runner, the suite's own entry in the filters file (not the rest of it: the `ignore` globs change which suites a diff selects, not what a suite's result is, so adding or editing another suite, the `ignore` globs or the `flaky` list reruns nothing by itself), the setup script and the manifests and lock files of the suite's part of the project, the ones decision 4 selects it by (so a new pinned tool, browser or dependency is a change, and a lock file of another part is not), the installed versions of the runtime, the browsers and the tools (read from them during the preflight, so a machine that drifted from the pins misses the cache), the names and values of the environment variables the suite reads, which its entry lists under `env` (a secret value only as its hash), with the project's version left out in its four places (the manifest's version field, the lock file's version field, the CHANGELOG, the version part of served asset names), so a renumber at merge reruns nothing, the selected test files, the baseline it loads, named by the hash of the end-to-end pass that made it rather than by the dump's bytes (so a change to the seed data, which changes that pass, reaches the suites that read it, and a baseline from identical code changes nothing), and every file matching its `paths` or `full` globs, tracked or untracked but not ignored (so a new file not yet committed counts, and an asset or a localisation file in `full` is never skipped as unchanged), as `path:sha256`, sorted.
+
+A pass adds the hash to the suite's set in `pass-cache.json`; the set keeps the hashes of the last three release tags and of every pass since, so switching back to code that passed, a revert included, reruns nothing. When the hash is in the set, the suite is skipped and reported as `skipped (passed on identical code, <date of that pass>)`.
+
+The runner comes with a cache test, as the check command does (`docs/code-check.md`): on a scratch copy it changes each input of a suite's hash in turn and expects a miss when the suite is next selected. It runs when the runner is written and whenever it changes, which already reruns every suite, so it adds no run of its own; a skip the agent suspects is wrong is reported with the pass it reused, and the owner's `--no-cache` run settles it.
+
+Every tier uses the cache, the expensive tier and a `--release` run included: a result on identical code and identical tools is the same result, so running it again proves nothing. The packaging steps of a release always run. A suite whose result depends on something outside the repository (a live-like run against an outside service) is marked `"uncached": true` in the filters file and runs every time it is selected. `--no-cache` forces a rerun when the owner asks for one.
 
 ## Unit-test selection by import graph
 
@@ -117,7 +125,7 @@ Before anything runs, the runner checks what the planned steps need and prints e
 
 ```text
 BLOCKED before the start (nothing ran):
-  x Node 22 or newer is required (found 20.11)    fix: install Node 22 from the setup script
+  x runtime 22 or newer is required (found 20.11)  fix: install it from the setup script
   x database engine not found on this machine    fix: run setup/install-db
   x interpreter for the end-to-end suite missing  fix: install it with the database and image extensions
 ```
@@ -157,7 +165,7 @@ A FAILED step is worked in this order. BLOCKED is not debugged in the code: the 
 3. **Reproduce** with the project's test tool on the one failing test, against a test database made the way the runner makes one and never the one in the project's `.env`, so each try takes seconds. The runner is not repeated until there is a fix.
 4. **Localize**: which part fails (the interface, the server, the database, the build, an outside service, or the test itself). For a regression, bisect between the last good commit and the first bad one with that one test.
 5. **Reduce** the case to the smallest input that still fails.
-6. **Fix the cause**, not the place it shows, and keep the reproducing test.
+6. **Fix the cause**, not the place it shows, and keep the reproducing test. Once the fix is in, the test tool does not run that test again: the next run is the runner's.
 7. **Run the runner.** It shows the reproducing test passing, runs what else the fix reaches and skips what passed on identical code; there is no extra run of the one test, and no full run "to make sure".
 
 When the failure followed an update of a tool or a dependency, the A/B rule below decides first.

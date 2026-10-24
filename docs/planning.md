@@ -8,6 +8,7 @@ What happens before the first line of code, for every kind of project. The playb
 - **A bug whose cause is not known yet** goes through the debugging order first (`docs/testing.md`); the plan follows once the cause is known, sized as above.
 - **A feature, a change across more than one part of the project, a new project, or a change that is hard to undo** (`HARNESS.md` section 3): the full order below, written before the code.
 - The plan is as long as the work needs: a few lines under each heading for a small feature, about a page for a new project.
+- A prompt that continues a task updates that task's plan and slices where it changes them, and a new task that picks up an open plan file (the next pull request of work planned across several) takes that file as its plan; neither does the research and the order of decisions again (`HARNESS.md` section 1, what runs when).
 
 ## The order of decisions
 

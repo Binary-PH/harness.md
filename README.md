@@ -26,7 +26,7 @@ It covers three stretches of every task:
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/harness-flow-dark.png">
-    <img src="assets/harness-flow-light.png" width="100%" alt="The agent's loop for one task, in eight steps. 1 Read: HARNESS.md, whole, once a session; a copy updates itself to the latest release. 2 Plan: planning.md and playbooks.md; research how others solve it; success criteria and thin slices. 3 Build: HARNESS.md section 3; one slice at a time; a failing test first. 4 Check: code-check.md; seven steps in one command; nothing passes silently. 5 Test: testing.md; only what a change reaches; FAILED, BLOCKED and FLAKY kept apart. 6 Review: code-review.md; the agent reads its own diff; no check loosened, trust boundaries read. 7 Ship: shipping.md; main is production; version, tag and a way back. 8 Learn: lessons.md; lessons with evidence, recalled in the next session. A dashed arrow leads from Learn back to Plan for the next task.">
+    <img src="assets/harness-flow-light.png" width="100%" alt="The agent's loop for one task, in eight steps. 1 Read: HARNESS.md, whole, once a session; a copy updates itself to the latest release. 2 Plan: planning.md and playbooks.md; research how others solve it; success criteria and thin slices. 3 Build: HARNESS.md section 3; one slice at a time; a failing test first. 4 Check: code-check.md; seven steps in one command; nothing passes silently. 5 Test: testing.md; only what a change reaches; FAILED, BLOCKED and FLAKY kept apart. 6 Review: code-review.md; the agent reads its own diff; no check loosened, trust boundaries read. 7 Ship: shipping.md; main is production; version, tag and a way back. 8 Learn: lessons.md; lessons with evidence, recalled when a task matches its cue. A dashed arrow leads from Learn back to Plan for the next task.">
   </picture>
 </p>
 
@@ -54,6 +54,8 @@ Every task runs the same loop, and each step has its page:
 6. **Review.** The agent reads its own diff for correctness, plainness, fit, cost and leftovers, and for any check made easier to pass. A change across a trust boundary also gets a security review of the code. Both come before the checks that run before the merge, so a fix they bring is checked once.
 7. **Ship.** Branch, version bump, checks once, pull request, squash-merge, health check, tag. A broken release is reverted through the same flow before it is debugged.
 8. **Learn.** Up to three lessons per task, each with a cue and its evidence, recalled when a later task matches the cue.
+
+Nothing here runs on every prompt. The setup runs once per project and the reading once per session; a question runs nothing; a change runs only the checks and suites it reaches; the ship steps run once per task, on one branch and one pull request; the expensive tier runs only on its events; and nothing already proven on identical input runs again.
 
 ## What a harness is made of
 
@@ -121,6 +123,7 @@ In the first session on a project, the agent:
 - `CHANGELOG.md`: every change to the harness.
 - `CONTRIBUTING.md`: how this repository is maintained: the rules of the text, the release procedure, the decisions already taken.
 - `assets/`: the logo and the diagram above, in a light and a dark version.
+- `assets/harness-flow.md`: the source of the diagram and the steps that render it.
 
 </details>
 

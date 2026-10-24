@@ -45,6 +45,7 @@ The code check gate (`docs/code-check.md`) runs tools over the code and the secu
 | TLS | 1.2 or newer only, no weak ciphers, a valid chain for every hostname, renewal automated |
 | Bot protection | a web application firewall or rate brake in front of sign-in, sign-up and forms |
 | Error handling | malformed input gets a generic error page, never a stack trace or a debug page |
+| Robots, sitemap, redirects (a site the public reaches through search, `docs/playbooks/web-seo.md`) | the robots file answers, is valid and names the sitemap; a sample of the sitemap's URLs (a few per section, not the whole list, which is the staging sitemap test's work) answers 200 and is canonical and indexable; an old URL reaches its new one in a single redirect |
 
 ## Active checks (authorization and a staging copy first)
 
